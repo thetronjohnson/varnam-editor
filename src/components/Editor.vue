@@ -15,9 +15,3 @@ export default {
     name:'Editor',
 }
 </script>
-<style>
-.textarea{
-    margin-left: 6vw;
-    margin-right: 6vw;
-}
-</style>

@@ -26,11 +26,6 @@ export default {
 </script>
 
 <style scoped>
-.panel {
-  padding-left: 5vw;
-  padding-right: 5vw;
-  padding-top: 2vh;
-}
 .title {
   text-align: center;  
   font-size: 20px;
