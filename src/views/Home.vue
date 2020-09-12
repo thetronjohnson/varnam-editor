@@ -27,7 +27,7 @@ export default {
 </script>
 <style scoped>
 .main{
-    padding-top:2vh;
+    padding-top:5vh;
     margin-left: 5vw;
     margin-right: 5vw;
 }

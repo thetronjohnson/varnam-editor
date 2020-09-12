@@ -1,17 +1,18 @@
 <template>
-    <div class="addwords">
-        Hello
+    <div class="main">
+        <AddWordsForm/>
     </div>
 </template>
 
 <script>
+import AddWordsForm from '@/components/addWordsForm.vue'
 export default {
     name:"AddWords",
+    components:{
+        AddWordsForm
+    }
 }
 </script>
 
 <style scoped>
-.addwords{
-    margin-top:50vw;
-}
 </style>
