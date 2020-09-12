@@ -50,5 +50,6 @@ hr{
   padding-top:5px !important;
   padding-bottom:5px !important;
   text-transform: capitalize;
+  font-weight: 700 !important;
 }
 </style>

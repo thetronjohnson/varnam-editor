@@ -11,6 +11,9 @@
             </v-card>
           </v-row>
         </template>
+         <div class="add-word">
+          <v-btn depressed class="sug-add" color="#4C5DF5">Add Word</v-btn>
+      </div>
       </div>
     </v-container>
   </div>
@@ -29,8 +32,8 @@ export default {
   padding-top: 2vh;
 }
 .title {
+  text-align: center;  
   font-size: 20px;
-  text-align: center;
   color: #4c5df5;
   font-weight: 600;
 }
@@ -44,8 +47,10 @@ export default {
     border: solid 1px;
     border-color: #4c5df5;
 }
-.suggestions{
-    margin: auto;
+.suggestions {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
     background:#F8F8F8;
     padding-bottom: 1rem;
     padding-top: 1rem;
@@ -58,5 +63,15 @@ export default {
 }
 .sug-word{
     padding-left: 1rem;
+}
+.sug-add{
+    margin-top:3rem;
+    height: 3rem;
+    width: 20rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    text-transform: capitalize;
+    color: #fff;
+    font-weight: 700;
 }
 </style>
