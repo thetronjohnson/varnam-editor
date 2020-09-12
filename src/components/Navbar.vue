@@ -31,6 +31,7 @@
 }
 .v-btn .v-btn__content .v-icon {
   color: #fff;
+  padding-right: 5px;
 }
 .title{
   color: #4C5DF5;
@@ -48,5 +49,6 @@ hr{
   color: #fff !important;
   padding-top:5px !important;
   padding-bottom:5px !important;
+  text-transform: capitalize;
 }
 </style>
