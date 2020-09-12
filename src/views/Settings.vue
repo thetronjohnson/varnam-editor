@@ -1,5 +1,15 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="settings">
+    <AddWords/>
+    <Navbar/>
   </div>
 </template>
+<script>
+import AddWords from '@/components/AddWords.vue'
+export default {
+  name:'Settings',
+  components:{
+    AddWords
+  }
+}
+</script>
