@@ -10,7 +10,7 @@
      <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
     </router-link>
       <v-spacer></v-spacer>
-      <router-link to="/setings" class="link"> 
+      <router-link to="/settings" class="link"> 
       <v-btn depressed class="settings" color="#4C5DF5">
         <v-icon >mdi-cog</v-icon>
         Settings 
