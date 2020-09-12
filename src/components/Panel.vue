@@ -46,6 +46,7 @@ export default {
     margin-top:1rem;
     border: solid 1px;
     border-color: #4c5df5;
+    background:#fff;
 }
 .suggestions {
     position: absolute;
