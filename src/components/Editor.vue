@@ -6,13 +6,13 @@
           label="Type your content"
           rows="20"
           color="#4C5DF5"
+          v-model="inputText"
           ref="editor"
         ></v-textarea>
     </div>
 </template>
 
 <script>
-const apiUrl = 'https://api.varnamproject.com/'
 const minChunkSize = 1
 const cycleOnTab = true
 const KEY = {
@@ -41,8 +41,14 @@ export default {
   data () {
     return {
       cachedSuggestions: [],
+      inputText: '',
       lang: 'ml',
-      suggestions: []
+    }
+  },
+
+  computed: {
+    suggestions: function () {
+      return this.$store.state.suggestions
     }
   },
 
@@ -111,7 +117,7 @@ export default {
         }
 
         if (e.keyCode == KEY.SPACE && typeof this.suggestions[1] !== 'undefined') {
-          this.replaceWord(this.suggestions[1]);
+          this.replaceWord(input, this.suggestions[1]);
         }
 
         localStorage['varnam-input'] = input.value;
@@ -119,16 +125,41 @@ export default {
     },
 
     getChunk(input) {
-        var text = input.value,
+        var text = this.inputText,
             pos = this.getCurrentWordPos(input),
             start = pos[0],
             end = pos[1];
         return text.substr(start, end - start);
     },
 
+    replaceWord(input, word) {
+        var text = this.inputText,
+            pos = this.getCurrentWordPos(input),
+            start = pos[0],
+            end = pos[1];
+
+        this.inputText = text.substring(0, start) + word + text.substring(end, text.length);
+
+        this.setCursorPosition(input, start + word.length);
+
+        this.$store.commit('clearSuggestions')
+    },
+
+    setCursorPosition(input, pos) {
+      if (input.setSelectionRange) {
+        input.setSelectionRange(pos, pos);
+      } else if (input.createTextRange) {
+        var range = input.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+      }
+    },
+
     showCachedSuggestions(word) {
       if (typeof this.cachedSuggestions[word] !== 'undefined') {
-        this.suggestions = this.cachedSuggestions[word]
+        this.$store.commit('setSuggestions', this.cachedSuggestions[word])
         return true;
       }
       return false;
@@ -137,7 +168,7 @@ export default {
     getCurrentWordPos(input) {
         const stopCharacters = [' ', '\n', '\r', '\t']
 
-        var text = input.value,
+        var text = this.inputText,
             end = input.selectionEnd;
         var textBeforeCursor = text.substr(0, end),
             indexOfDelimiter = -1,
@@ -166,9 +197,9 @@ export default {
     },
 
     transliterate(word) {
-      fetch(apiUrl + `/tl/${this.lang}/${word}`)
+      fetch(this.$VARNAM_API_URL + `/tl/${this.lang}/${word}`)
         .then(response => response.json())
-        .then(data => this.suggestions = data.result);
+        .then(data => this.$store.commit('setSuggestions', data));
     }
   },
   mounted () {
