@@ -3,11 +3,11 @@
     <v-container>
       <div class="suggestions">
         <p class="title">Word Suggestions</p>
-        <template v-for="n in 4">
-          <v-row :key="n" align="start" justify="center">
+        <template v-for="item in suggestions">
+          <v-row :key="item.key" align="start" justify="center">
             <v-card class="card" outlined>
-                <v-btn depressed class="sug-id" color="#4C5DF5">{{n-1}}</v-btn>
-                <span class="sug-word">Word</span>
+                <v-btn depressed class="sug-id" color="#4C5DF5">{{item.key}}</v-btn>
+                <span class="sug-word">{{item.suggestion}}</span>
             </v-card>
           </v-row>
         </template>
@@ -21,7 +21,18 @@
 
 <script>
 export default {
-  name: "Panel"
+  name: "Panel",
+  data:()=>{
+    return{
+        suggestions:[
+            {key:0,suggestion:"word 0"},
+            {key:1,suggestion:"word 1"},
+            {key:2,suggestion:"word 2"},
+            {key:3,suggestion:"word 3"}
+             
+        ],
+    }
+  }
 };
 </script>
 
