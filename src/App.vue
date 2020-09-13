@@ -1,10 +1,10 @@
 <template>
-<div>
-  <Navbar/>
+  <v-app>
+    <Navbar/>
     <transition name="slide">
       <router-view/>
     </transition>
-</div>
+  </v-app>
 </template>
 
 <script>

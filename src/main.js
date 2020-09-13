@@ -10,6 +10,12 @@ Vue.config.productionTip = false
 window.$VARNAM_API_URL = "https://api.varnamproject.com/"
 Vue.prototype.$VARNAM_API_URL = window.$VARNAM_API_URL
 
+Vue.prototype.$LANGS = {
+  ml: 'Malayalam',
+  hi: 'Hindi',
+  kn: 'Kannada'
+}
+
 new Vue({
   router,
   store,

@@ -6,24 +6,25 @@
       flat
       v-if="$route.name == 'Home'"
     >
-    <router-link to="/" class="link"> 
-     <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
-    </router-link>
+      <router-link to="/" class="link"> 
+        <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
+      </router-link>
       <v-spacer></v-spacer>
-        <div class="lang">
+      <div class="lang">
         <v-select
-          :items="items"
-          label="lang"
+          :items="langs"
+          value="Malayalam"
+          v-model="lang"
+          label="Language"
           outlined
           dense
         ></v-select>
-        </div>
-  
+      </div>
       <router-link to="/settings" class="link"> 
-      <v-btn depressed class="settings" color="#4C5DF5">
-        <v-icon >mdi-cog</v-icon>
-        Settings 
-      </v-btn>
+        <v-btn depressed class="settings" color="#4C5DF5">
+          <v-icon >mdi-cog</v-icon>
+          Settings 
+        </v-btn>
       </router-link>
     </v-app-bar>
     <v-app-bar class="appbar"
@@ -32,23 +33,15 @@
       flat
       v-else
     >
-    <router-link to="/" class="link">
-     <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
-    </router-link>
+      <router-link to="/" class="link">
+        <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
+      </router-link>
       <v-spacer></v-spacer>
-      <div class="lang">
-        <v-select
-          :items="items"
-          label="lang"
-          outlined
-          dense
-        ></v-select>
-        </div>
       <router-link to="/" class="link"> 
-      <v-btn depressed class="settings" color="#4C5DF5">
-        <v-icon >mdi-arrow-left</v-icon>
-        Back
-      </v-btn>
+        <v-btn depressed class="settings" color="#4C5DF5">
+          <v-icon >mdi-arrow-left</v-icon>
+          Back
+        </v-btn>
       </router-link>
     </v-app-bar>
     <hr/>
@@ -56,12 +49,23 @@
 </template>
 
 <script>
-
   export default {
-    name:'Navbar',
-      data: () => ({
-      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-    }),
+    name: 'Navbar',
+    data () {
+      return {
+        langs: Object.keys(this.$LANGS)
+      }
+    },
+    computed: {
+      lang: {
+        get () {
+          return this.$store.state.lang
+        },
+        set (value) {
+          this.$store.commit('setLang', value)
+        }
+      }
+    }
   }
 </script>
 
@@ -94,15 +98,14 @@ hr{
   text-transform: capitalize;
   font-weight: 700 !important;
 }
- a{
-     text-decoration: none !important;
- }
- .lang{
+a{
+  text-decoration: none !important;
+}
+.lang{
    margin-top:1.6rem;
    padding-top:5px !important;
    padding-bottom:5px !important;
-   width: 5rem !important;
+   width: 10rem !important;
    margin-right: 2rem;
  }
-
 </style>

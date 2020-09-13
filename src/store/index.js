@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    lang: 'ml',
     suggestions: []
   },
   mutations: {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     clearSuggestions (state) {
       state.suggestions = []
+    },
+    setLang (state, lang) {
+      state.lang = lang
     }
   },
   actions: {

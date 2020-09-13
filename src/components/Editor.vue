@@ -41,12 +41,14 @@ export default {
   data () {
     return {
       cachedSuggestions: [],
-      inputText: '',
-      lang: 'ml',
+      inputText: ''
     }
   },
 
   computed: {
+    lang: function () {
+      return this.$store.state.lang
+    },
     suggestions: function () {
       return this.$store.state.suggestions
     }
