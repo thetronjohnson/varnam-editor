@@ -10,6 +10,15 @@
      <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
     </router-link>
       <v-spacer></v-spacer>
+        <div class="lang">
+        <v-select
+          :items="items"
+          label="lang"
+          outlined
+          dense
+        ></v-select>
+        </div>
+  
       <router-link to="/settings" class="link"> 
       <v-btn depressed class="settings" color="#4C5DF5">
         <v-icon >mdi-cog</v-icon>
@@ -27,6 +36,14 @@
      <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
     </router-link>
       <v-spacer></v-spacer>
+      <div class="lang">
+        <v-select
+          :items="items"
+          label="lang"
+          outlined
+          dense
+        ></v-select>
+        </div>
       <router-link to="/" class="link"> 
       <v-btn depressed class="settings" color="#4C5DF5">
         <v-icon >mdi-arrow-left</v-icon>
@@ -42,6 +59,11 @@
 
   export default {
     name:'Navbar',
+    data:()=>{
+      return{
+        items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      }
+    }
   }
 </script>
 
@@ -76,6 +98,13 @@ hr{
 }
  a{
      text-decoration: none !important;
+ }
+ .lang{
+   margin-top:1.6rem;
+   padding-top:5px !important;
+   padding-bottom:5px !important;
+   width: 5rem !important;
+   margin-right: 2rem;
  }
 
 </style>
