@@ -59,11 +59,9 @@
 
   export default {
     name:'Navbar',
-    data:()=>{
-      return{
-        items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-      }
-    }
+      data: () => ({
+      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+    }),
   }
 </script>
 
