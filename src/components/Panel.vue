@@ -61,11 +61,11 @@ export default {
     padding-left: 1rem;
 }
 .sug-add{
-    margin-top:3rem;
-    height: 3rem;
-    width: 20rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-top:3vh;
+    height: 3vh;
+    width: 20vw;
+    margin-left: 1vw;
+    margin-right: 1vw;
     text-transform: capitalize;
     color: #fff;
     font-weight: 700;

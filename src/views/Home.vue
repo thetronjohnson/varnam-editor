@@ -1,11 +1,11 @@
 <template>
   <div class="home">
    <v-container class="main">
-     <v-row no-gutters>
-       <v-col :cols="9">
+     <v-row no-gutters >
+       <v-col class="editor" cols="6" sm="9">
         <Editor/>
        </v-col>
-       <v-col :cols="3">
+       <v-col class="panel" cols="6" sm="3">
         <Panel/>
        </v-col>
      </v-row>
