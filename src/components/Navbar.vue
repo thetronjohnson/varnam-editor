@@ -23,7 +23,7 @@
       <router-link to="/settings" class="link"> 
         <v-btn depressed class="settings" color="#4C5DF5">
           <v-icon >mdi-cog</v-icon>
-          Settings 
+          <span class="s-text">Settings</span>
         </v-btn>
       </router-link>
     </v-app-bar>
@@ -82,7 +82,7 @@
 .title{
   color: #4C5DF5;
   font-weight:600;
-  font-size:28px;
+  font-size:25px;
 }
 hr{
   margin-top:5px;
@@ -102,10 +102,17 @@ a{
   text-decoration: none !important;
 }
 .lang{
+   margin-left: 1rem;
    margin-top:1.6rem;
    padding-top:5px !important;
    padding-bottom:5px !important;
-   width: 10rem !important;
-   margin-right: 2rem;
+   width: 10rem;
+   margin-right: 1rem;
  }
+
+ @media only screen and (max-width: 600px) {
+  .s-text{
+    display: none;
+  }
+}
 </style>
