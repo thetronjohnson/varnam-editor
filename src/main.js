@@ -7,8 +7,8 @@ import vuetify from './plugins/vuetify'
 Vue.config.productionTip = false
 
 // No trailing slash
-// api.varnamproject.com
 window.$VARNAM_API_URL = 'http://127.0.0.1:8089'
+// window.$VARNAM_API_URL = 'https://api.varnamproject.com'
 Vue.prototype.$VARNAM_API_URL = window.$VARNAM_API_URL
 
 Vue.prototype.$LANGS = {

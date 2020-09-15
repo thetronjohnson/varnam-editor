@@ -35,6 +35,8 @@ const KEY = {
   SPACE: 32
 }
 
+let fetchController = null
+
 export default {
   name: 'Editor',
 
@@ -198,7 +200,16 @@ export default {
     },
 
     transliterate (word) {
-      fetch(this.$VARNAM_API_URL + `/tl/${this.lang}/${word}`)
+      if (fetchController) {
+        fetchController.abort()
+      }
+      fetchController = new AbortController()
+      fetch(
+        this.$VARNAM_API_URL + `/tl/${this.lang}/${word}`,
+        {
+          signal: fetchController.signal
+        }
+      )
         .then(response => response.json())
         .then(data => this.$store.commit('setSuggestions', data))
     }
