@@ -28,7 +28,7 @@
 
 <script>
 export default {
-    name:"AddWordsForm",
+  name: 'AddWordsForm'
 }
 </script>
 

@@ -7,8 +7,8 @@
 <script>
 import AddWords from '@/components/AddWords.vue'
 export default {
-  name:'Settings',
-  components:{
+  name: 'Settings',
+  components: {
     AddWords
   }
 }

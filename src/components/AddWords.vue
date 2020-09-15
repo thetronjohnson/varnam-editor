@@ -27,20 +27,20 @@
 <script>
 import AddWordsForm from '@/components/addWordsForm.vue'
 export default {
-    name:"AddWords",
-    components:{
-        AddWordsForm
-    },
-    data:()=>{
-        return{
-        wordlist:[
-            {key:1,english:'Firefox',regional:'ഫയർഫോക്സ് ',votes:50},
-            {key:2,english:'Chrome',regional:'ക്രോം',votes:40},
-            {key:3,english:'English',regional:'ഇംഗ്ലീഷ്',votes:100},
-             
-        ],
-        }
+  name: 'AddWords',
+  components: {
+    AddWordsForm
+  },
+  data: () => {
+    return {
+      wordlist: [
+        { key: 1, english: 'Firefox', regional: 'ഫയർഫോക്സ് ', votes: 50 },
+        { key: 2, english: 'Chrome', regional: 'ക്രോം', votes: 40 },
+        { key: 3, english: 'English', regional: 'ഇംഗ്ലീഷ്', votes: 100 }
+
+      ]
     }
+  }
 }
 </script>
 

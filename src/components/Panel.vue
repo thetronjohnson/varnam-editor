@@ -21,13 +21,13 @@
 
 <script>
 export default {
-  name: "Panel"
-};
+  name: 'Panel'
+}
 </script>
 
 <style scoped>
 .title {
-  text-align: center;  
+  text-align: center;
   font-size: 20px;
   color: #4c5df5;
   font-weight: 600;

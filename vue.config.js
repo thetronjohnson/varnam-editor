@@ -1,8 +1,8 @@
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
+  transpileDependencies: [
+    'vuetify'
   ],
-  publicPath: typeof process.env.VUE_PUBLIC_PATH !== "undefined"
+  publicPath: typeof process.env.VUE_PUBLIC_PATH !== 'undefined'
     ? process.env.VUE_PUBLIC_PATH
     : '/'
 }

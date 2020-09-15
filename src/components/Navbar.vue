@@ -6,7 +6,7 @@
       flat
       v-if="$route.name == 'Home'"
     >
-      <router-link to="/" class="link"> 
+      <router-link to="/" class="link">
         <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>
@@ -20,7 +20,7 @@
           dense
         ></v-select>
       </div>
-      <router-link to="/settings" class="link"> 
+      <router-link to="/settings" class="link">
         <v-btn depressed class="settings" color="#4C5DF5">
           <v-icon >mdi-cog</v-icon>
           <span class="s-text">Settings</span>
@@ -37,7 +37,7 @@
         <v-toolbar-title class="title">Varnam Editor</v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>
-      <router-link to="/" class="link"> 
+      <router-link to="/" class="link">
         <v-btn depressed class="settings" color="#4C5DF5">
           <v-icon >mdi-arrow-left</v-icon>
           Back
@@ -49,24 +49,24 @@
 </template>
 
 <script>
-  export default {
-    name: 'Navbar',
-    data () {
-      return {
-        langs: Object.keys(this.$LANGS)
-      }
-    },
-    computed: {
-      lang: {
-        get () {
-          return this.$store.state.lang
-        },
-        set (value) {
-          this.$store.commit('setLang', value)
-        }
+export default {
+  name: 'Navbar',
+  data () {
+    return {
+      langs: Object.keys(this.$LANGS)
+    }
+  },
+  computed: {
+    lang: {
+      get () {
+        return this.$store.state.lang
+      },
+      set (value) {
+        this.$store.commit('setLang', value)
       }
     }
   }
+}
 </script>
 
 <style scoped>
