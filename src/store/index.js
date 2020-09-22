@@ -5,19 +5,32 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    currentWord: 0, // Word ID
     lang: 'ml',
-    suggestions: []
+
+    /**
+     * {
+     *   wordid: [suggestions: string]
+     * }
+     */
+    suggestions: {}
   },
   mutations: {
+    setCurrentWord (state, payload) {
+      state.currentWord = payload
+    },
+
     setSuggestions (state, payload) {
-      state.suggestions = [
-        ...[payload.input],
-        ...payload.result
-      ]
+      Vue.set(state.suggestions, payload.id, [
+        ...[payload.word],
+        ...payload.suggestions
+      ])
     },
-    clearSuggestions (state) {
-      state.suggestions = []
+
+    clearSuggestions (state, wordID) {
+      Vue.delete(state.suggestions, wordID)
     },
+
     setLang (state, lang) {
       state.lang = lang
     }
