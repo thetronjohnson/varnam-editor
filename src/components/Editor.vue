@@ -13,7 +13,7 @@
 </template>
 
 <script>
-const minChunkSize = 1
+const minWordSize = 1
 const cycleOnTab = true
 const KEY = {
   UNKNOWN: 0,
@@ -35,7 +35,11 @@ const KEY = {
   SPACE: 32
 }
 
-let fetchController = null
+let input
+
+const transliterateTimeout = []
+const fetchController = []
+const wordsToReplace = []
 
 export default {
   name: 'Editor',
@@ -58,7 +62,7 @@ export default {
 
   methods: {
     init () {
-      const input = this.$refs.editor.$el.getElementsByTagName('textarea')[0]
+      input = this.$refs.editor.$el.getElementsByTagName('textarea')[0]
 
       input.addEventListener('keyup', (e) => {
         var hasSpecialKeys = e.altKey || e.metaKey || e.ctrlKey
@@ -87,12 +91,27 @@ export default {
               break
             }
             if (!hasSpecialKeys) {
-              var chunk = this.getCurrentWord(input)
-              if (chunk.length >= minChunkSize) {
-                if (!this.showCachedSuggestions(this.getCurrentWord(input))) {
-                  this.transliterate(this.getCurrentWord(input))
+              const wordPosition = this.getCurrentWordPosition()
+              const wordID = wordPosition[2]
+              const word = this.getChunk(wordPosition)
+
+              console.log(word, wordID)
+
+              if (word.length >= minWordSize) {
+                // if (!this.showCachedSuggestions(wordID, word)) {
+                if (fetchController[wordID]) {
+                  fetchController[wordID].abort()
                 }
+
+                clearTimeout(transliterateTimeout[wordID])
+
+                transliterateTimeout[wordID] = setTimeout(() => {
+                  this.transliterate(word, wordID)
+                  delete transliterateTimeout[wordID]
+                }, 500)
+                // }
               }
+              this.$store.commit('setCurrentWord', wordID)
             }
             break
         }
@@ -103,23 +122,28 @@ export default {
 
         if (hasSpecialKeysOrShift) { return }
 
+        const wordPosition = this.getCurrentWordPosition()
+        const wordID = wordPosition[2]
+
         // numeric keys
         if (e.keyCode >= 48 && e.keyCode <= 57) {
           var i = e.keyCode - 48
 
           e.preventDefault()
 
-          if (typeof this.suggestions[i] !== 'undefined') {
-            this.replaceWord(input, this.getCurrentWordPos(input), this.suggestions[i])
+          const suggestedWord = this.suggestions[wordID][i]
+
+          if (typeof suggestedWord !== 'undefined') {
+            // add a space at the end too
+            this.replaceWord(wordPosition, suggestedWord + ' ')
           }
         }
 
         if (e.keyCode === KEY.SPACE) {
-          // if suggestions has not yet received, wait
-          if (typeof this.suggestions[1] === 'undefined') {
-            this.onTransliterationResult()
+          if (this.suggestions[wordID]) {
+            this.replaceWord(wordPosition, this.suggestions[wordID][1])
           } else {
-            this.replaceWord(input, this.getCurrentWordPos(input), this.suggestions[1])
+            this.replaceWordOnSuggestion(wordPosition)
           }
         }
 
@@ -127,30 +151,34 @@ export default {
       })
     },
 
-    getChunk (input, pos) {
-      var text = input.value
-      var start = pos[0]
-      var end = pos[1]
+    getChunk (pos) {
+      const text = input.value
+      const start = pos[0]
+      const end = pos[1]
       return text.substr(start, end - start)
     },
 
-    getCurrentWord (input) {
-      return this.getChunk(input, this.getCurrentWordPos(input))
+    replaceWordOnSuggestion (position) {
+      const wordID = position[2]
+      wordsToReplace[wordID] = position
     },
 
-    replaceWord (input, position, word) {
-      var text = this.inputText
-      var start = position[0]
-      var end = position[1]
+    replaceWord (position, word) {
+      const wordID = position[2]
+      const text = this.inputText
+      const start = position[0]
+      const end = position[1]
 
       this.inputText = text.substring(0, start) + word + text.substring(end, text.length)
 
-      this.setCursorPosition(input, start + word.length)
+      this.$nextTick(() => {
+        this.setCursorPosition(input.selectionEnd + word.length)
+      })
 
-      this.$store.commit('clearSuggestions')
+      this.$store.commit('clearSuggestions', wordID)
     },
 
-    setCursorPosition (input, pos) {
+    setCursorPosition (pos) {
       if (input.setSelectionRange) {
         input.setSelectionRange(pos, pos)
       } else if (input.createTextRange) {
@@ -162,15 +190,15 @@ export default {
       }
     },
 
-    showCachedSuggestions (word) {
+    showCachedSuggestions (word, wordID) {
       if (typeof this.cachedSuggestions[word] !== 'undefined') {
-        this.$store.commit('setSuggestions', this.cachedSuggestions[word])
+        this.onSuggestionsReceive(word, wordID, this.cachedSuggestions[word])
         return true
       }
       return false
     },
 
-    getCurrentWordPos (input) {
+    getCurrentWordPosition () {
       const stopCharacters = [' ', '\n', '\r', '\t']
 
       var text = this.inputText
@@ -194,26 +222,51 @@ export default {
           break
         }
       }
+
+      // Find the ordinal number of the word in the sentence
+      // എത്രാമത്തെ വാക്കാണ് ഇതെന്ന് കണ്ടുപിടിക്കുക
+      let nThWord = 0
+      const delimeterSplitted = textBeforeCursor.match(/\S+/gi)
+      if (delimeterSplitted) {
+        nThWord = delimeterSplitted.length - 1
+      }
+
       if (indexOfDelimiter < 0) {
-        return [0, end]
+        return [0, end, nThWord]
       } else {
-        return [indexOfDelimiter + 1, end]
+        return [indexOfDelimiter + 1, end, nThWord]
       }
     },
 
-    transliterate (word) {
-      if (fetchController) {
-        fetchController.abort()
-      }
-      fetchController = new AbortController()
+    transliterate (word, wordID) {
+      fetchController[wordID] = new AbortController()
+
       fetch(
         this.$VARNAM_API_URL + `/tl/${this.lang}/${word}`,
         {
-          signal: fetchController.signal
+          signal: fetchController[wordID].signal
         }
       )
         .then(response => response.json())
-        .then(data => this.$store.commit('setSuggestions', data))
+        .then(data => {
+          this.onSuggestionsReceive(word, wordID, data.result)
+
+          delete fetchController[wordID]
+        })
+    },
+
+    onSuggestionsReceive (word, wordID, suggestions) {
+      this.$store.commit('setSuggestions', {
+        id: wordID,
+        word: word,
+        suggestions
+      })
+
+      if (wordsToReplace[wordID]) {
+        const wordPosition = wordsToReplace[wordID]
+        this.replaceWord(wordPosition, suggestions[0])
+        delete wordsToReplace[wordID]
+      }
     }
   },
   mounted () {
