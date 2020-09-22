@@ -87,10 +87,10 @@ export default {
               break
             }
             if (!hasSpecialKeys) {
-              var chunk = this.getChunk(input)
+              var chunk = this.getCurrentWord(input)
               if (chunk.length >= minChunkSize) {
-                if (!this.showCachedSuggestions(this.getChunk(input))) {
-                  this.transliterate(this.getChunk(input))
+                if (!this.showCachedSuggestions(this.getCurrentWord(input))) {
+                  this.transliterate(this.getCurrentWord(input))
                 }
               }
             }
@@ -110,36 +110,38 @@ export default {
           e.preventDefault()
 
           if (typeof this.suggestions[i] !== 'undefined') {
-            this.replaceWord(input, this.suggestions[i])
-            // var obj = $('#suggestions li').eq(i);
-            // obj.addClass('green white-text');
-            // setTimeout(function() {
-            //     obj.removeClass('green white-text');
-            // }, 500);
+            this.replaceWord(input, this.getCurrentWordPos(input), this.suggestions[i])
           }
         }
 
-        if (e.keyCode === KEY.SPACE && typeof this.suggestions[1] !== 'undefined') {
-          this.replaceWord(input, this.suggestions[1])
+        if (e.keyCode === KEY.SPACE) {
+          // if suggestions has not yet received, wait
+          if (typeof this.suggestions[1] === 'undefined') {
+            this.onTransliterationResult()
+          } else {
+            this.replaceWord(input, this.getCurrentWordPos(input), this.suggestions[1])
+          }
         }
 
         localStorage['varnam-input'] = input.value
       })
     },
 
-    getChunk (input) {
-      var text = this.inputText
-      var pos = this.getCurrentWordPos(input)
+    getChunk (input, pos) {
+      var text = input.value
       var start = pos[0]
       var end = pos[1]
       return text.substr(start, end - start)
     },
 
-    replaceWord (input, word) {
+    getCurrentWord (input) {
+      return this.getChunk(input, this.getCurrentWordPos(input))
+    },
+
+    replaceWord (input, position, word) {
       var text = this.inputText
-      var pos = this.getCurrentWordPos(input)
-      var start = pos[0]
-      var end = pos[1]
+      var start = position[0]
+      var end = position[1]
 
       this.inputText = text.substring(0, start) + word + text.substring(end, text.length)
 
