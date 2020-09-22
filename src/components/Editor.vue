@@ -41,6 +41,20 @@ const transliterateTimeout = []
 const fetchController = []
 const wordsToReplace = []
 
+// Thanks vsync
+// https://stackoverflow.com/a/13335359/1372424
+function hasEnglishChar (s) {
+  let i, charCode
+  for (i = s.length; i--;) {
+    charCode = s.charCodeAt(i)
+    // Character code from A to z
+    if (charCode >= 65 && charCode <= 122) {
+      return true
+    }
+  }
+  return false
+}
+
 export default {
   name: 'Editor',
 
@@ -80,20 +94,19 @@ export default {
             }
             // falls through
           case KEY.ESC:
-          case KEY.UP:
-          case KEY.DOWN:
-          case KEY.LEFT:
-          case KEY.RIGHT:
             break
           default:
             // numkeys & numpad
             if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)) {
               break
             }
+
             if (!hasSpecialKeys) {
               const wordPosition = this.getCurrentWordPosition()
               const wordID = wordPosition[2]
               const word = this.getChunk(wordPosition)
+
+              if (!hasEnglishChar(word)) return
 
               console.log(word, wordID)
 
@@ -122,24 +135,32 @@ export default {
 
         if (hasSpecialKeysOrShift) { return }
 
+        const keysToSkip = [KEY.BACKSPACE, KEY.DEL, KEY.LEFT, KEY.RIGHT, KEY.UP, KEY.DOWN, KEY.SHIFT, KEY.CTRL]
+
+        if (keysToSkip.indexOf(e.keyCode) !== -1) { return }
+
+        if (e.keyCode >= 65 && e.keyCode <= 90) { return }
+
         const wordPosition = this.getCurrentWordPosition()
         const wordID = wordPosition[2]
+        const word = this.getChunk(wordPosition)
 
         // numeric keys
         if (e.keyCode >= 48 && e.keyCode <= 57) {
           var i = e.keyCode - 48
 
-          e.preventDefault()
+          if (this.suggestions[wordID]) {
+            e.preventDefault()
 
-          const suggestedWord = this.suggestions[wordID][i]
+            const suggestedWord = this.suggestions[wordID][i]
 
-          if (typeof suggestedWord !== 'undefined') {
-            // add a space at the end too
-            this.replaceWord(wordPosition, suggestedWord + ' ')
+            if (typeof suggestedWord !== 'undefined') {
+              // add a space at the end too
+              this.replaceWord(wordPosition, suggestedWord)
+            }
           }
-        }
-
-        if (e.keyCode === KEY.SPACE) {
+        } else if (hasEnglishChar(word)) {
+          // Not a character key
           if (this.suggestions[wordID]) {
             this.replaceWord(wordPosition, this.suggestions[wordID][1])
           } else {
@@ -169,10 +190,13 @@ export default {
       const start = position[0]
       const end = position[1]
 
-      this.inputText = text.substring(0, start) + word + text.substring(end, text.length)
+      const cursorPos = input.selectionEnd
+      this.inputText = text.substring(0, start) + word + text.substr(end, text.length)
+
+      const change = word.length - (end - start)
 
       this.$nextTick(() => {
-        this.setCursorPosition(input.selectionEnd + word.length)
+        this.setCursorPosition(cursorPos + change)
       })
 
       this.$store.commit('clearSuggestions', wordID)
@@ -199,7 +223,7 @@ export default {
     },
 
     getCurrentWordPosition () {
-      const stopCharacters = [' ', '\n', '\r', '\t']
+      const stopCharacters = [' ', '\n', '\r', '\t', ',', '.']
 
       var text = this.inputText
       var end = input.selectionEnd
