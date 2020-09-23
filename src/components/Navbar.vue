@@ -12,7 +12,7 @@
           <v-select
             :items="langs"
             :hide-details="true"
-            value="Malayalam"
+            value="ml"
             v-model="lang"
             label="Language"
             outlined
@@ -35,7 +35,6 @@
         </v-col>
       </v-row>
     </v-toolbar>
-    <hr/>
   </div>
 </template>
 
@@ -43,11 +42,19 @@
 export default {
   name: 'Navbar',
   data () {
-    return {
-      langs: Object.keys(this.$LANGS)
-    }
+    return {}
   },
   computed: {
+    langs: function () {
+      const items = []
+      this.$store.state.langs.forEach(langInfo => {
+        items.push({
+          text: langInfo.DisplayName,
+          value: langInfo.LangCode
+        })
+      })
+      return items
+    },
     lang: {
       get () {
         return this.$store.state.lang

@@ -11,11 +11,11 @@ window.$VARNAM_API_URL = 'http://127.0.0.1:8123'
 // window.$VARNAM_API_URL = 'https://api.varnamproject.com'
 Vue.prototype.$VARNAM_API_URL = window.$VARNAM_API_URL
 
-Vue.prototype.$LANGS = {
-  ml: 'Malayalam',
-  hi: 'Hindi',
-  kn: 'Kannada'
-}
+fetch(window.$VARNAM_API_URL + '/languages')
+  .then(response => response.json())
+  .then(languages => {
+    store.commit('setLangs', languages)
+  })
 
 new Vue({
   router,

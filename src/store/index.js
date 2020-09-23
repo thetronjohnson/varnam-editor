@@ -6,6 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentWord: 0, // Word ID
+
+    langs: [],
     lang: 'ml',
 
     // Suggestions to display
@@ -47,6 +49,10 @@ export default new Vuex.Store({
 
     setLang (state, lang) {
       state.lang = lang
+    },
+
+    setLangs (state, langs) {
+      state.langs = langs
     }
   },
   actions: {
