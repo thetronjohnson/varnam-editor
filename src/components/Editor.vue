@@ -5,7 +5,6 @@
           name="translate"
           label="Type your content"
           rows="20"
-          color="#4C5DF5"
           v-model="inputText"
           ref="editor"
           :autofocus="true"
