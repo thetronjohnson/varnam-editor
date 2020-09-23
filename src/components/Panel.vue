@@ -3,7 +3,7 @@
     <v-container>
       <div class="suggestions">
         <p class="title">Word Suggestions</p>
-        <template v-for="(item, index) in $store.state.suggestions[$store.state.currentWord]">
+        <template v-for="(item, index) in $store.state.suggestionsDisplay">
           <v-row :key="item.key" align="start" justify="center">
             <v-card class="card" outlined>
                 <v-btn depressed class="sug-id" color="#4C5DF5">{{index}}</v-btn>

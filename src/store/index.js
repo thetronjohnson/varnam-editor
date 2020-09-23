@@ -8,12 +8,22 @@ export default new Vuex.Store({
     currentWord: 0, // Word ID
     lang: 'ml',
 
+    // Suggestions to display
+    suggestionsDisplay: [],
+
     /**
      * {
-     *   wordid: [suggestions: string]
+     *   wordid: [suggestions]
      * }
      */
-    suggestions: {}
+    suggestions: {},
+
+    /**
+     * {
+     *   transliterated_word: [suggestions]
+     * }
+     */
+    alternateWords: {}
   },
   mutations: {
     setCurrentWord (state, payload) {
@@ -29,6 +39,10 @@ export default new Vuex.Store({
 
     clearSuggestions (state, wordID) {
       Vue.delete(state.suggestions, wordID)
+    },
+
+    displaySuggestions (state, suggestions) {
+      state.suggestionsDisplay = suggestions
     },
 
     setLang (state, lang) {

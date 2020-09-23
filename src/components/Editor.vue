@@ -60,8 +60,9 @@ export default {
 
   data () {
     return {
-      cachedSuggestions: [],
-      inputText: ''
+      inputText: '',
+
+      alternateWords: []
     }
   },
 
@@ -106,7 +107,14 @@ export default {
               const wordID = wordPosition[2]
               const word = this.getChunk(wordPosition)
 
-              if (!hasEnglishChar(word)) return
+              if (!hasEnglishChar(word)) {
+                // Show alternate suggestions for that word
+                if (this.alternateWords[word]) {
+                  this.$store.commit('displaySuggestions', this.alternateWords[word])
+                }
+
+                return
+              }
 
               console.log(word, wordID)
 
@@ -156,13 +164,13 @@ export default {
 
             if (typeof suggestedWord !== 'undefined') {
               // add a space at the end too
-              this.replaceWord(wordPosition, suggestedWord)
+              this.replaceWord(wordPosition, this.suggestions[wordID], i)
             }
           }
         } else if (hasEnglishChar(word)) {
           // Not a character key
           if (this.suggestions[wordID]) {
-            this.replaceWord(wordPosition, this.suggestions[wordID][1])
+            this.replaceWord(wordPosition, this.suggestions[wordID], 1)
           } else {
             this.replaceWordOnSuggestion(wordPosition)
           }
@@ -184,21 +192,24 @@ export default {
       wordsToReplace[wordID] = position
     },
 
-    replaceWord (position, word) {
-      const wordID = position[2]
-      const text = this.inputText
+    replaceWord (position, suggestions, suggestionIndex) {
       const start = position[0]
       const end = position[1]
+      const wordID = position[2]
+
+      const replaceWord = suggestions[suggestionIndex]
+      const text = this.inputText
 
       const cursorPos = input.selectionEnd
-      this.inputText = text.substring(0, start) + word + text.substr(end, text.length)
+      this.inputText = text.substring(0, start) + replaceWord + text.substr(end, text.length)
 
-      const change = word.length - (end - start)
+      const change = replaceWord.length - (end - start)
 
       this.$nextTick(() => {
         this.setCursorPosition(cursorPos + change)
       })
 
+      this.alternateWords[replaceWord] = suggestions
       this.$store.commit('clearSuggestions', wordID)
     },
 
@@ -286,9 +297,16 @@ export default {
         suggestions
       })
 
+      const suggestionsWithEnglishFirst = [
+        ...[word],
+        ...suggestions
+      ]
+
+      this.$store.commit('displaySuggestions', suggestionsWithEnglishFirst)
+
       if (wordsToReplace[wordID]) {
         const wordPosition = wordsToReplace[wordID]
-        this.replaceWord(wordPosition, suggestions[0])
+        this.replaceWord(wordPosition, suggestionsWithEnglishFirst, 0)
         delete wordsToReplace[wordID]
       }
     }
