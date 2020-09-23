@@ -147,6 +147,7 @@ export default {
 
         if (keysToSkip.indexOf(e.keyCode) !== -1) { return }
 
+        // character keys A-Z
         if (e.keyCode >= 65 && e.keyCode <= 90) { return }
 
         const wordPosition = this.getCurrentWordPosition()
@@ -155,21 +156,21 @@ export default {
 
         // numeric keys
         if (e.keyCode >= 48 && e.keyCode <= 57) {
-          var i = e.keyCode - 48
+          let suggestions = []
+          const suggestionIndex = e.keyCode - 48
 
           if (this.suggestions[wordID]) {
+            suggestions = this.suggestions[wordID]
+          } else if (this.alternateWords[word]) {
+            suggestions = this.alternateWords[word]
+          }
+
+          if (suggestions[suggestionIndex]) {
             e.preventDefault()
-
-            const suggestedWord = this.suggestions[wordID][i]
-
-            if (typeof suggestedWord !== 'undefined') {
-              // add a space at the end too
-              this.replaceWord(wordPosition, this.suggestions[wordID], i)
-            }
+            this.replaceWord(wordPosition, suggestions, suggestionIndex)
           }
         } else if (hasEnglishChar(word)) {
-          // Not a character key
-          if (this.suggestions[wordID]) {
+          if (this.suggestions[wordID] && this.suggestions[wordID][0] === word) {
             this.replaceWord(wordPosition, this.suggestions[wordID], 1)
           } else {
             this.replaceWordOnSuggestion(wordPosition)
@@ -306,7 +307,7 @@ export default {
 
       if (wordsToReplace[wordID]) {
         const wordPosition = wordsToReplace[wordID]
-        this.replaceWord(wordPosition, suggestionsWithEnglishFirst, 0)
+        this.replaceWord(wordPosition, suggestionsWithEnglishFirst, 1)
         delete wordsToReplace[wordID]
       }
     }
