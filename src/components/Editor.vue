@@ -308,7 +308,9 @@ export default {
 
       if (wordsToReplace[wordID]) {
         const wordPosition = wordsToReplace[wordID]
-        this.replaceWord(wordPosition, suggestionsWithEnglishFirst, 1)
+        if (this.getChunk(wordPosition) === word) {
+          this.replaceWord(wordPosition, suggestionsWithEnglishFirst, 1)
+        }
         delete wordsToReplace[wordID]
       }
     }
