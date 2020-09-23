@@ -117,8 +117,6 @@ export default {
                 return
               }
 
-              console.log(word, wordID)
-
               if (word.length >= minWordSize) {
                 // if (!this.showCachedSuggestions(wordID, word)) {
                 if (fetchController[wordID]) {
@@ -179,6 +177,16 @@ export default {
         }
 
         localStorage['varnam-input'] = input.value
+      })
+
+      input.addEventListener('click', () => {
+        const wordPosition = this.getCurrentWordPosition()
+        const word = this.getChunk(wordPosition)
+
+        // Show alternate suggestions for that word
+        if (this.alternateWords[word]) {
+          this.$store.commit('displaySuggestions', this.alternateWords[word])
+        }
       })
     },
 
