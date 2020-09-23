@@ -8,6 +8,7 @@
           color="#4C5DF5"
           v-model="inputText"
           ref="editor"
+          :autofocus="true"
         ></v-textarea>
     </div>
 </template>
