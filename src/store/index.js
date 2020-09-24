@@ -25,9 +25,31 @@ export default new Vuex.Store({
      *   transliterated_word: [suggestions]
      * }
      */
-    alternateWords: {}
+    alternateWords: {},
+
+    // Editor settings
+    settings: {
+      fontSize: 14
+    }
   },
   mutations: {
+    initSettings (state) {
+      let settings = window.localStorage.getItem('settings')
+      if (settings) {
+        settings = JSON.parse(settings)
+        state.settings = Object.assign({}, state.settings, settings)
+      }
+    },
+
+    updateSettings (state, payload) {
+      Vue.set(state, 'settings', {
+        ...state.settings,
+        ...payload
+      })
+
+      window.localStorage.setItem('settings', JSON.stringify(state.settings))
+    },
+
     setCurrentWord (state, payload) {
       state.currentWord = payload
     },

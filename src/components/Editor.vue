@@ -1,15 +1,16 @@
 <template>
-    <div class="textarea">
-        <v-textarea
-          outlined
-          name="translate"
-          label="Type your content"
-          rows="20"
-          v-model="inputText"
-          ref="editor"
-          :autofocus="true"
-        ></v-textarea>
-    </div>
+  <div class="textarea">
+    <v-textarea
+      outlined
+      name="translate"
+      label="Type your content"
+      rows="20"
+      v-model="inputText"
+      ref="editor"
+      :autofocus="true"
+      :style="`font-size: ${$store.state.settings.fontSize}px`"
+    ></v-textarea>
+  </div>
 </template>
 
 <script>

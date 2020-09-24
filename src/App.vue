@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar/>
+    <navbar/>
     <transition name="slide">
       <router-view/>
     </transition>
