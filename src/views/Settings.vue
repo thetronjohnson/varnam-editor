@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-layout row class="d-flex justify-center">
-      <v-flex xs6>
+      <v-flex xs11 xl6>
         <v-tabs v-model="tab" :grow="true">
           <v-tabs-slider></v-tabs-slider>
           <v-tab href="#editor">
@@ -25,10 +25,18 @@
                 <v-tab>Offline</v-tab>
                 <v-tab>Online</v-tab>
                 <v-tab-item>
-                  <AddWordsOffline/>
+                  <v-card flat tile>
+                    <v-card-text>
+                      <AddWordsOffline/>
+                    </v-card-text>
+                  </v-card>
                 </v-tab-item>
                 <v-tab-item>
-                  <AddWordsOnline/>
+                  <v-card flat tile>
+                    <v-card-text>
+                      <AddWordsOnline/>
+                    </v-card-text>
+                  </v-card>
                 </v-tab-item>
               </v-tabs>
             </div>

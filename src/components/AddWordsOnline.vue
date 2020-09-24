@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AddWordForm/>
+    <AddWordForm @addWord="addWord" />
     <v-data-table
       :headers="headers"
       :items="words"
@@ -24,9 +24,11 @@ import AddWordForm from '@/components/AddWordForm.vue'
 
 export default {
   name: 'AddWordsOnline',
+
   components: {
     AddWordForm
   },
+
   data: () => {
     return {
       headers: [
@@ -51,6 +53,12 @@ export default {
         { id: 2, word: 'ക്രോം', pattern: '', votes: 40 },
         { id: 3, word: 'ഇംഗ്ലീഷ്', pattern: '', votes: 100 }
       ]
+    }
+  },
+
+  methods: {
+    addWord (e) {
+      console.log(e)
     }
   }
 }

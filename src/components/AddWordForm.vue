@@ -8,7 +8,7 @@
             v-model="word"
             :hide-details="true"
             outlined
-            color="#4C5DF5"
+            color="primary"
           ></v-text-field>
         </v-col>
         <v-col cols="5">
@@ -17,7 +17,7 @@
             v-model="pattern"
             :hide-details="true"
             outlined
-            color="#4C5DF5"
+            color="primary"
           ></v-text-field>
         </v-col>
         <v-col cols="3">
