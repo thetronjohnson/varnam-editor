@@ -1,27 +1,25 @@
 <template>
-  <div class="panel">
-    <v-container>
-      <div class="suggestions">
-        <p class="title">Word Suggestions</p>
-        <template v-for="(item, index) in $store.state.suggestionsDisplay">
-          <v-row :key="item.key" align="start" justify="center">
-            <v-card class="card" outlined>
-                <v-btn depressed class="sug-id" color="#4C5DF5">{{index}}</v-btn>
-                <span class="sug-word">{{item}}</span>
-            </v-card>
-          </v-row>
-        </template>
-         <div class="add-word">
-          <v-btn depressed class="sug-add" color="#4C5DF5">Add Word</v-btn>
-      </div>
-      </div>
-    </v-container>
+  <div>
+    <div class="suggestions">
+      <p class="title">Word Suggestions</p>
+      <template v-for="(item, index) in $store.state.suggestionsDisplay">
+        <v-row :key="item.key" align="start" justify="center">
+          <v-card class="word-card" outlined>
+            <v-btn depressed class="sug-id" color="primary">{{ index }}</v-btn>
+            <div class="sug-word">{{ item }}</div>
+          </v-card>
+        </v-row>
+      </template><br/>
+      <center class="add-word">
+        <v-btn class="sug-add" color="primary" to="/settings?tab=words">Add Word</v-btn>
+      </center>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Panel'
+  name: 'SuggestionsPanel'
 }
 </script>
 
@@ -32,42 +30,20 @@ export default {
   color: #4c5df5;
   font-weight: 600;
 }
-.card{
-    text-align: left;
-    margin-left: 2rem;
-    margin-right: 2rem;
-    height: 3rem;
-    width:20rem;
-    margin-top:1rem;
-    border: solid 1px;
-    border-color: #4c5df5;
-    background:#fff;
+.word-card{
+  text-align: left;
+  min-width: 20rem;
+  margin-top: 1rem;
+  border: solid 1px;
+  border-color: #4c5df5;
+  background:#fff;
 }
-.suggestions {
-    position: absolute;
-    align-items: center;
-    justify-content: center;
-    background:#F8F8F8;
-    padding-bottom: 1rem;
-    padding-top: 1rem;
-}
-.sug-id{
-  color: #fff;
-  font-weight: 700;
-  height: 3rem !important;
-  min-width: 3rem !important;
+.v-btn.sug-id {
+  padding: 1.5rem;
+  min-width: 0;
 }
 .sug-word{
-    padding-left: 1rem;
-}
-.sug-add{
-    margin-top:3vh;
-    height: 3vh;
-    width: 20vw;
-    margin-left: 1vw;
-    margin-right: 1vw;
-    text-transform: capitalize;
-    color: #fff;
-    font-weight: 700;
+  display: inline-block;
+  padding-left: 1rem;
 }
 </style>

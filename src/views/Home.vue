@@ -3,10 +3,10 @@
    <v-container class="main">
      <v-row no-gutters >
        <v-col class="editor" cols="6" sm="9">
-        <Editor/>
+        <Editor />
        </v-col>
        <v-col class="panel" cols="6" sm="3">
-        <Panel/>
+        <SuggestionsPanel />
        </v-col>
      </v-row>
    </v-container>
@@ -16,15 +16,17 @@
 <script>
 // @ is an alias to /src
 import Editor from '@/components/Editor.vue'
-import Panel from '@/components/Panel.vue'
+import SuggestionsPanel from '@/components/Panel.vue'
+
 export default {
   name: 'Home',
   components: {
     Editor,
-    Panel
+    SuggestionsPanel
   }
 }
 </script>
+
 <style scoped>
 .main{
     padding-top:5vh;
