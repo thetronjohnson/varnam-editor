@@ -30,7 +30,10 @@ export default new Vuex.Store({
     settings: {
       lang: 'ml',
       fontSize: 14
-    }
+    },
+
+    // IDB Words. Will change as lang change
+    idbWords: {}
   },
   mutations: {
     initSettings (state) {
@@ -71,6 +74,16 @@ export default new Vuex.Store({
 
     setLangs (state, langs) {
       state.langs = langs
+    },
+
+    setIDBWords (state, wordsArray) {
+      // TODO: storing all words in an object is probably a bad idea
+      // will work good for small amount of words, so it's alright
+      const words = {}
+      wordsArray.forEach(item => {
+        words[item.pattern] = item.word
+      })
+      state.idbWords = words
     }
   },
   actions: {

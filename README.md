@@ -2,6 +2,11 @@
 
 Browser & Desktop compatible editor frontend for [Varnam](https://TypeIndianLang.Online).
 
+## Features
+
+* Fully compatible with [varnamd](https://github.com/varnamproject/varnamd)
+* Uses browser IndexedDB for storing custom words user like (Offline words)
+
 ## Project Setup
 
 Install dependencies :

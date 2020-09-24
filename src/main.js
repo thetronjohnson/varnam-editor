@@ -73,7 +73,16 @@ Vue.prototype.$VARNAM_IDB = {
         const wordsStore = transaction.objectStore('words')
 
         resolve(wordsStore)
+        db.close()
       })
+    })
+  },
+
+  fetchWords () {
+    this.getWordsStore().then(wordsStore => {
+      wordsStore.getAll().onsuccess = e => {
+        store.commit('setIDBWords', e.target.result)
+      }
     })
   }
 }

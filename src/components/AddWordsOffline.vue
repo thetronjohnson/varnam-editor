@@ -137,6 +137,7 @@ export default {
           request.onsuccess = () => {
             this.snackbarText = 'Word was addedd successfully'
             this.snackbarDisplay = true
+            this.init()
           }
           request.onerror = (e) => {
             console.log(e)

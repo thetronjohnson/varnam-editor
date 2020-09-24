@@ -188,6 +188,16 @@ export default {
           this.$store.commit('displaySuggestions', this.alternateWords[word])
         }
       })
+
+      if (!this.$VARNAM_OFFLINE) {
+        this.$VARNAM_IDB.fetchWords()
+
+        this.$store.subscribe(mutation => {
+          if (mutation.type === 'updateSettings') {
+            this.$VARNAM_IDB.fetchWords()
+          }
+        })
+      }
     },
 
     getChunk (pos) {
@@ -284,20 +294,25 @@ export default {
     },
 
     transliterate (word, wordID) {
-      fetchController[wordID] = new AbortController()
+      if (!this.$VARNAM_OFFLINE && this.$store.state.idbWords[word]) {
+        // First, check IndexedDB
+        this.onSuggestionsReceive(word, wordID, [this.$store.state.idbWords[word]])
+      } else {
+        fetchController[wordID] = new AbortController()
 
-      fetch(
-        this.$VARNAM_API_URL + `/tl/${this.lang}/${word}`,
-        {
-          signal: fetchController[wordID].signal
-        }
-      )
-        .then(response => response.json())
-        .then(data => {
-          this.onSuggestionsReceive(word, wordID, data.result)
+        fetch(
+          this.$VARNAM_API_URL + `/tl/${this.lang}/${word}`,
+          {
+            signal: fetchController[wordID].signal
+          }
+        )
+          .then(response => response.json())
+          .then(data => {
+            this.onSuggestionsReceive(word, wordID, data.result)
 
-          delete fetchController[wordID]
-        })
+            delete fetchController[wordID]
+          })
+      }
     },
 
     onSuggestionsReceive (word, wordID, suggestions) {
