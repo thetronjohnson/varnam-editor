@@ -7,7 +7,6 @@
       :items-per-page="5"
       sort-by="votes"
       sort-desc
-      class="text-h4"
     >
       <template v-slot:item.action="{ item }">
         <v-btn depressed color="primary">
@@ -23,7 +22,7 @@
 import AddWordForm from '@/components/AddWordForm.vue'
 
 export default {
-  name: 'AddWordsOnline',
+  name: 'AddWordsOffline',
   components: {
     AddWordForm
   },

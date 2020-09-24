@@ -25,6 +25,7 @@
                 <v-tab>Offline</v-tab>
                 <v-tab>Online</v-tab>
                 <v-tab-item>
+                  <AddWordsOffline/>
                 </v-tab-item>
                 <v-tab-item>
                   <AddWordsOnline/>
@@ -43,6 +44,7 @@
 
 <script>
 import AddWordsOnline from '@/components/AddWordsOnline.vue'
+import AddWordsOffline from '@/components/AddWordsOffline.vue'
 import EditorSettings from '@/components/EditorSettings.vue'
 
 export default {
@@ -63,6 +65,7 @@ export default {
 
   components: {
     AddWordsOnline,
+    AddWordsOffline,
     EditorSettings
   }
 }
