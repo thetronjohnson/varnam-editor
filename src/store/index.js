@@ -8,7 +8,6 @@ export default new Vuex.Store({
     currentWord: 0, // Word ID
 
     langs: [],
-    lang: 'ml',
 
     // Suggestions to display
     suggestionsDisplay: [],
@@ -29,12 +28,13 @@ export default new Vuex.Store({
 
     // Editor settings
     settings: {
+      lang: 'ml',
       fontSize: 14
     }
   },
   mutations: {
     initSettings (state) {
-      let settings = window.localStorage.getItem('settings')
+      let settings = window.localStorage.getItem('varnam-settings')
       if (settings) {
         settings = JSON.parse(settings)
         state.settings = Object.assign({}, state.settings, settings)
@@ -47,7 +47,7 @@ export default new Vuex.Store({
         ...payload
       })
 
-      window.localStorage.setItem('settings', JSON.stringify(state.settings))
+      window.localStorage.setItem('varnam-settings', JSON.stringify(state.settings))
     },
 
     setCurrentWord (state, payload) {
@@ -67,10 +67,6 @@ export default new Vuex.Store({
 
     displaySuggestions (state, suggestions) {
       state.suggestionsDisplay = suggestions
-    },
-
-    setLang (state, lang) {
-      state.lang = lang
     },
 
     setLangs (state, langs) {

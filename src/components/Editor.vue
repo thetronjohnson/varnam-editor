@@ -69,7 +69,7 @@ export default {
 
   computed: {
     lang: function () {
-      return this.$store.state.lang
+      return this.$store.state.settings.lang
     },
     suggestions: function () {
       return this.$store.state.suggestions

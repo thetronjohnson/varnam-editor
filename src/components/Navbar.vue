@@ -57,10 +57,12 @@ export default {
     },
     lang: {
       get () {
-        return this.$store.state.lang
+        return this.$store.state.settings.lang
       },
       set (value) {
-        this.$store.commit('setLang', value)
+        this.$store.commit('updateSettings', {
+          lang: value
+        })
       }
     }
   }
