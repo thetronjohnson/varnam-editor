@@ -21,6 +21,9 @@
           </v-tab-item>
           <v-tab-item value="words">
             <div v-if="$VARNAM_OFFLINE">
+              <AddWordsOffline/>
+            </div>
+            <div v-else>
               <v-tabs :vertical="true">
                 <v-tab>Offline</v-tab>
                 <v-tab>Online</v-tab>
@@ -39,9 +42,6 @@
                   </v-card>
                 </v-tab-item>
               </v-tabs>
-            </div>
-            <div v-else>
-              <AddWordsOnline/>
             </div>
           </v-tab-item>
         </v-tabs>

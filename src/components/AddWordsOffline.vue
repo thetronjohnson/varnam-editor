@@ -40,6 +40,22 @@
         </template>
       </v-data-table>
     </div>
+    <v-snackbar
+      v-model="snackbarDisplay"
+      :right="true"
+    >
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="secondary"
+          text
+          v-bind="attrs"
+          @click="snackbarDisplay = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -69,6 +85,9 @@ export default {
 
   data: () => {
     return {
+      snackbarDisplay: false,
+      snackbarText: false,
+
       wordToRemove: '',
 
       headers: [
@@ -88,21 +107,50 @@ export default {
           value: 'action'
         }
       ],
-      words: [
-        { id: 1, word: 'ഫയർഫോക്സ്', pattern: 'firefox', votes: 50 },
-        { id: 2, word: 'ക്രോം', pattern: '', votes: 40 },
-        { id: 3, word: 'ഇംഗ്ലീഷ്', pattern: '', votes: 100 }
-      ]
+
+      words: []
     }
   },
 
   methods: {
-    addWord (e) {
-      console.log(e)
+    init () {
+      if (!this.$VARNAM_OFFLINE) {
+        this.$VARNAM_IDB.getWordsStore().then(wordsStore => {
+          wordsStore.getAll().onsuccess = e => {
+            this.words = e.target.result
+          }
+        })
+      }
+    },
+
+    addWord (wordInfo) {
+      if (wordInfo.pattern.trim() === '' || wordInfo.word.trim() === '') {
+        this.snackbarText = 'Some inputs were empty'
+        this.snackbarDisplay = true
+      }
+
+      if (this.$VARNAM_OFFLINE) {
+        // TODO send request
+      } else {
+        this.$VARNAM_IDB.getWordsStore().then(wordsStore => {
+          const request = wordsStore.add(wordInfo)
+          request.onsuccess = () => {
+            this.snackbarText = 'Word was addedd successfully'
+            this.snackbarDisplay = true
+          }
+          request.onerror = (e) => {
+            console.log(e)
+          }
+        })
+      }
     },
 
     removeWord () {
     }
+  },
+
+  mounted () {
+    this.init()
   }
 }
 </script>
