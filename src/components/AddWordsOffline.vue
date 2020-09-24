@@ -4,20 +4,20 @@
       <span class="text-h6">Add Word</span>
       <AddWordForm @addWord="addWord" />
       <v-form>
-        <span class="text-h6">Remove Word</span>
+        <span class="text-h6">Delete Word</span>
         <v-row cols="12"  align="center">
           <v-col cols="8">
             <v-text-field
-              :label="`Word to remove (in ${langName})`"
-              v-model="wordToRemove"
+              :label="`Word to delete (in ${langName})`"
+              v-model="wordToDelete"
               :hide-details="true"
               outlined
             ></v-text-field>
           </v-col>
           <v-col cols="4">
-            <v-btn large color="error" @click="removeWord">
+            <v-btn large color="error" @click="deleteWord">
               <v-icon>mdi-minus</v-icon>
-              Remove Word
+              Delete Word
             </v-btn>
           </v-col>
         </v-row>
@@ -27,15 +27,14 @@
       <AddWordForm @addWord="addWord" />
       <v-data-table
         :headers="headers"
-        :items="words"
+        :items.sync="words"
         :items-per-page="5"
         sort-by="votes"
         sort-desc
       >
         <template v-slot:item.action="{ item }">
-          <v-btn depressed color="primary">
-            <v-icon>mdi-arrow-up-box</v-icon>
-            {{item.votes}}
+          <v-btn small color="error" @click="deleteWord(item.id)">
+            <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
       </v-data-table>
@@ -88,9 +87,15 @@ export default {
       snackbarDisplay: false,
       snackbarText: false,
 
-      wordToRemove: '',
+      wordToDelete: '',
 
       headers: [
+        {
+          text: '',
+          sortable: false,
+          value: 'action',
+          width: 10
+        },
         {
           text: 'Word',
           sortable: true,
@@ -100,11 +105,6 @@ export default {
           text: 'Pattern',
           sortable: true,
           value: 'pattern'
-        },
-        {
-          text: '',
-          sortable: false,
-          value: 'action'
         }
       ],
 
@@ -145,7 +145,15 @@ export default {
       }
     },
 
-    removeWord () {
+    deleteWord (id) {
+      if (this.$VARNAM_OFFLINE) {
+        // varnamd request
+      } else {
+        this.$VARNAM_IDB.getWordsStore().then(wordsStore => {
+          wordsStore.delete(id)
+          this.init()
+        })
+      }
     }
   },
 
