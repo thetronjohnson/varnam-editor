@@ -6,9 +6,14 @@ import vuetify from './plugins/vuetify'
 
 Vue.config.productionTip = false
 
+// Is this editor running offline on a system and not the website
+window.$VARNAM_OFFLINE = true
+
 // No trailing slash
 window.$VARNAM_API_URL = 'http://127.0.0.1:8123'
 // window.$VARNAM_API_URL = 'https://api.varnamproject.com'
+
+Vue.prototype.$VARNAM_OFFLINE = window.$VARNAM_OFFLINE
 Vue.prototype.$VARNAM_API_URL = window.$VARNAM_API_URL
 
 window.fetch(window.$VARNAM_API_URL + '/languages')

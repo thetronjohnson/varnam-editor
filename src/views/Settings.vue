@@ -20,11 +20,20 @@
             </v-card>
           </v-tab-item>
           <v-tab-item value="words">
-            <v-card flat tile>
-              <v-card-text>
-                saa
-              </v-card-text>
-            </v-card>
+            <div v-if="$VARNAM_OFFLINE">
+              <v-tabs :vertical="true">
+                <v-tab>Offline</v-tab>
+                <v-tab>Online</v-tab>
+                <v-tab-item>
+                </v-tab-item>
+                <v-tab-item>
+                  <AddWordsOnline/>
+                </v-tab-item>
+              </v-tabs>
+            </div>
+            <div v-else>
+              <AddWordsOnline/>
+            </div>
           </v-tab-item>
         </v-tabs>
       </v-flex>
@@ -33,7 +42,9 @@
 </template>
 
 <script>
+import AddWordsOnline from '@/components/AddWordsOnline.vue'
 import EditorSettings from '@/components/EditorSettings.vue'
+
 export default {
   name: 'Settings',
 
@@ -51,6 +62,7 @@ export default {
   },
 
   components: {
+    AddWordsOnline,
     EditorSettings
   }
 }
