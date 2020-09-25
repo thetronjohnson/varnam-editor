@@ -74,7 +74,7 @@ export default {
 
   methods: {
     init () {
-      fetch(this.$VARNAM_REVIEW_URL + '/suggestions')
+      fetch(this.$VARNAM_REVIEW_URL + '/suggestions?lang=' + this.$store.state.settings.lang)
         .then(response => response.json())
         .then(data => {
           this.words = data
