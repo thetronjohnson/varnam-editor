@@ -80,6 +80,8 @@ export default new Vuex.Store({
     },
 
     setLangs (state, langs) {
+      // Sort by identifier
+      langs.sort((a, b) => a.Identifier.localeCompare(b.Identifier))
       state.langs = langs
     },
 
