@@ -12,7 +12,6 @@
           <v-select
             :items="langs"
             :hide-details="true"
-            value="ml"
             v-model="lang"
             label="Language"
             outlined

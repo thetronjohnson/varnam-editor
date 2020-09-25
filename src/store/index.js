@@ -29,7 +29,8 @@ export default new Vuex.Store({
     // Editor settings
     settings: {
       lang: 'ml',
-      fontSize: 14
+      fontSize: 14,
+      suggestionsPanelPosition: 'right'
     },
 
     // IDB Words. Will change as lang change
@@ -72,6 +73,10 @@ export default new Vuex.Store({
       state.suggestionsDisplay = suggestions
     },
 
+    hideSuggestions (state) {
+      state.suggestionsDisplay = []
+    },
+
     setLangs (state, langs) {
       state.langs = langs
     },
@@ -84,7 +89,12 @@ export default new Vuex.Store({
         words[item.pattern] = item.word
       })
       state.idbWords = words
-    }
+    },
+
+    // Event Bus
+    // Dummy mutations
+    // For events across components
+    requestSend () {}
   },
   actions: {
   },

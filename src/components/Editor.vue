@@ -3,7 +3,7 @@
     <v-textarea
       outlined
       name="translate"
-      label="Type your content"
+      label="Type here..."
       rows="20"
       v-model="inputText"
       ref="editor"
@@ -107,6 +107,11 @@ export default {
               const wordPosition = this.getCurrentWordPosition()
               const wordID = wordPosition[2]
               const word = this.getChunk(wordPosition)
+
+              if (word.trim() === '') {
+                this.$store.commit('hideSuggestions')
+                return
+              }
 
               if (!hasEnglishChar(word)) {
                 // Show alternate suggestions for that word
@@ -299,6 +304,9 @@ export default {
         this.onSuggestionsReceive(word, wordID, [this.$store.state.idbWords[word]])
       } else {
         fetchController[wordID] = new AbortController()
+
+        // For event trigger
+        this.$store.commit('requestSend')
 
         fetch(
           this.$VARNAM_API_URL + `/tl/${this.lang}/${word}`,
