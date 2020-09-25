@@ -4,21 +4,28 @@
     <v-card-text class="suggestions">
       <v-skeleton-loader
         v-show="placeholder"
-        type="list-item-avatar"
         :boilerplate="true"
         :tile="true"
-      ></v-skeleton-loader>
+      >
+        <v-card class="word-card d-flex align-center" outlined>
+          <v-btn depressed class="sug-id" color="primary">1</v-btn>
+          <div class="flex-grow-1 sug-word v-skeleton-loader__bone v-skeleton-loader__list-item-avatar">
+            <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+          </div>
+        </v-card>
+      </v-skeleton-loader>
       <div v-for="(item, index) in $store.state.suggestionsDisplay" :key="item.key">
-        <v-row align="start" justify="center">
-          <v-card class="word-card" outlined>
-            <v-btn depressed class="sug-id" color="primary">{{ index }}</v-btn>
-            <div class="sug-word">{{ item }}</div>
-          </v-card>
-        </v-row>
+        <v-card class="word-card d-flex align-center" outlined>
+          <v-btn depressed class="sug-id" color="primary">{{ index }}</v-btn>
+          <div class="sug-word v-skeleton-loader__list-item-avatar">{{ item }}</div>
+        </v-card>
       </div>
     </v-card-text>
     <v-card-actions class="justify-center">
-      <v-btn depressed color="primary" to="/settings?tab=words">Add Word</v-btn>
+      <v-btn depressed color="primary" to="/settings?tab=words">
+        <v-icon>mdi-plus</v-icon>
+        Add Word
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -52,7 +59,7 @@ export default {
 
 <style scoped>
 .title {
-  text-align: center;
+  justify-content: center;
   color: #4c5df5;
   font-weight: 600;
 }
@@ -69,7 +76,6 @@ export default {
   min-width: 0;
 }
 .sug-word{
-  display: inline-block;
-  padding-left: 1rem;
+  padding: 0 1rem 0 0.5rem;
 }
 </style>
