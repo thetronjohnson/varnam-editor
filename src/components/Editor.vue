@@ -197,7 +197,6 @@ export default {
         this.$VARNAM_IDB.fetchWords()
 
         this.$store.subscribe(mutation => {
-          console.log(mutation)
           if (mutation.type === 'updateSettings') {
             this.$VARNAM_IDB.fetchWords()
           }

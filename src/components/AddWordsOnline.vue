@@ -3,7 +3,7 @@
     <AddWordForm @addWord="addWord" />
     <v-data-table
       :headers="headers"
-      :items="words"
+      :items.sync="words"
       :items-per-page="5"
       sort-by="votes"
       sort-desc
@@ -16,6 +16,22 @@
         </v-btn>
       </template>
     </v-data-table>
+    <v-snackbar
+      v-model="snackbarDisplay"
+      :right="true"
+    >
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="secondary"
+          text
+          v-bind="attrs"
+          @click="snackbarDisplay = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -31,7 +47,16 @@ export default {
 
   data: () => {
     return {
+      snackbarDisplay: false,
+      snackbarText: false,
+
       headers: [
+        {
+          text: '',
+          sortable: false,
+          value: 'action',
+          width: 10
+        },
         {
           text: 'Word',
           sortable: true,
@@ -41,25 +66,41 @@ export default {
           text: 'Pattern',
           sortable: true,
           value: 'pattern'
-        },
-        {
-          text: '',
-          sortable: false,
-          value: 'action'
         }
       ],
-      words: [
-        { id: 1, word: 'ഫയർഫോക്സ്', pattern: 'firefox', votes: 50 },
-        { id: 2, word: 'ക്രോം', pattern: '', votes: 40 },
-        { id: 3, word: 'ഇംഗ്ലീഷ്', pattern: '', votes: 100 }
-      ]
+      words: []
     }
   },
 
   methods: {
-    addWord (e) {
-      console.log(e)
+    init () {
+      fetch(this.$VARNAM_REVIEW_URL + '/suggestions')
+        .then(response => response.json())
+        .then(data => {
+          this.words = data
+        })
+    },
+
+    addWord (wordInfo) {
+      wordInfo.lang = this.$store.state.settings.lang
+
+      fetch(this.$VARNAM_REVIEW_URL + '/suggestions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(wordInfo)
+      })
+        .then(_ => {
+          this.snackbarText = 'Word was addedd successfully'
+          this.snackbarDisplay = true
+          this.init()
+        })
     }
+  },
+
+  mounted () {
+    this.init()
   }
 }
 </script>

@@ -71,7 +71,7 @@ export default {
 }
 .word-card {
   text-align: left;
-  min-width: 20rem;
+  width: 100%;
   margin-top: 1rem;
   border: solid 1px;
   border-color: #4c5df5;
