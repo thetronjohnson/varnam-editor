@@ -49,7 +49,7 @@ export default {
       this.$store.state.langs.forEach(langInfo => {
         items.push({
           text: langInfo.DisplayName,
-          value: langInfo.LangCode
+          value: langInfo.Identifier
         })
       })
       return items

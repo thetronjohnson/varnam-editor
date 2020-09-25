@@ -45,7 +45,7 @@ export default {
   computed: {
     langName () {
       const langInfo = this.$store.state.langs.find(item => {
-        return item.LangCode === this.$store.state.settings.lang
+        return item.Identifier === this.$store.state.settings.lang
       })
 
       if (langInfo) {

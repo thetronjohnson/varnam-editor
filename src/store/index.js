@@ -7,6 +7,8 @@ export default new Vuex.Store({
   state: {
     currentWord: 0, // Word ID
 
+    // Detailed info of all the schemes
+    // https://api.varnamproject.com/languages
     langs: [],
 
     // Suggestions to display
