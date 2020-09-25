@@ -10,9 +10,10 @@
       class="text-h4"
     >
       <template v-slot:item.action="{ item }">
-        <v-btn depressed color="primary">
-          <v-icon>mdi-arrow-up-box</v-icon>
-          {{item.votes}}
+        <v-btn depressed :color="item.voted ? 'primary' : 'secondary'" @click="vote(item.id)">
+          <v-icon v-if="item.voted">mdi-arrow-down-box</v-icon>
+          <v-icon v-else>mdi-arrow-up-box</v-icon>
+          {{ item.votes }}
         </v-btn>
       </template>
     </v-data-table>
@@ -95,6 +96,30 @@ export default {
           this.snackbarText = 'Word was addedd successfully'
           this.snackbarDisplay = true
           this.init()
+        })
+    },
+
+    vote (sid) {
+      const suggestionItem = this.words.find(item => item.id === sid)
+
+      fetch(this.$VARNAM_REVIEW_URL + '/suggestions/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sid
+        })
+      })
+        .then(response => response.json())
+        .then(response => {
+          if (response.message === 'voted') {
+            suggestionItem.voted = false
+            suggestionItem.votes--
+          } else if (response.message === 'success') {
+            suggestionItem.voted = true
+            suggestionItem.votes++
+          }
         })
     }
   },
