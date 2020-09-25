@@ -16,7 +16,7 @@
       </v-skeleton-loader>
       <div v-for="(item, index) in $store.state.suggestionsDisplay" :key="item.key">
         <v-card class="word-card d-flex align-center" outlined>
-          <v-btn depressed class="sug-id" color="primary">{{ index }}</v-btn>
+          <v-btn depressed class="sug-id" color="primary" @click="chooseSuggestion(index)">{{ index }}</v-btn>
           <div class="sug-word v-skeleton-loader__list-item-avatar">{{ item }}</div>
         </v-card>
       </div>
@@ -38,6 +38,12 @@ export default {
     return {
       placeholder: true,
       loading: false
+    }
+  },
+
+  methods: {
+    chooseSuggestion (index) {
+      this.$store.commit('chooseSuggestion', index)
     }
   },
 
@@ -63,7 +69,7 @@ export default {
   color: #4c5df5;
   font-weight: 600;
 }
-.word-card{
+.word-card {
   text-align: left;
   min-width: 20rem;
   margin-top: 1rem;
@@ -75,7 +81,7 @@ export default {
   padding: 1.5rem;
   min-width: 0;
 }
-.sug-word{
+.sug-word {
   padding: 0 1rem 0 0.5rem;
 }
 </style>

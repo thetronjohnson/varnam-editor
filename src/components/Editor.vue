@@ -160,18 +160,10 @@ export default {
 
         // numeric keys
         if (e.keyCode >= 48 && e.keyCode <= 57) {
-          let suggestions = []
           const suggestionIndex = e.keyCode - 48
 
-          if (this.suggestions[wordID]) {
-            suggestions = this.suggestions[wordID]
-          } else if (this.alternateWords[word]) {
-            suggestions = this.alternateWords[word]
-          }
-
-          if (suggestions[suggestionIndex]) {
+          if (this.chooseSuggestion(suggestionIndex, wordPosition)) {
             e.preventDefault()
-            this.replaceWord(wordPosition, suggestions, suggestionIndex)
           }
         } else if (hasEnglishChar(word)) {
           if (this.suggestions[wordID] && this.suggestions[wordID][0] === word) {
@@ -194,10 +186,18 @@ export default {
         }
       })
 
+      this.$store.subscribe(mutation => {
+        if (mutation.type === 'chooseSuggestion') {
+          this.chooseSuggestion(mutation.payload)
+        }
+      })
+
+      // For online editor
       if (!this.$VARNAM_OFFLINE) {
         this.$VARNAM_IDB.fetchWords()
 
         this.$store.subscribe(mutation => {
+          console.log(mutation)
           if (mutation.type === 'updateSettings') {
             this.$VARNAM_IDB.fetchWords()
           }
@@ -344,6 +344,29 @@ export default {
         }
         delete wordsToReplace[wordID]
       }
+    },
+
+    chooseSuggestion (suggestionIndex, wordPosition) {
+      if (!wordPosition) {
+        wordPosition = this.getCurrentWordPosition()
+      }
+
+      const wordID = wordPosition[2]
+      const word = this.getChunk(wordPosition)
+
+      let suggestions = []
+
+      if (this.suggestions[wordID]) {
+        suggestions = this.suggestions[wordID]
+      } else if (this.alternateWords[word]) {
+        suggestions = this.alternateWords[word]
+      }
+
+      if (suggestions[suggestionIndex]) {
+        this.replaceWord(wordPosition, suggestions, suggestionIndex)
+        return true
+      }
+      return false
     }
   },
   mounted () {

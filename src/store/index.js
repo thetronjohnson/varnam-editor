@@ -94,7 +94,8 @@ export default new Vuex.Store({
     // Event Bus
     // Dummy mutations
     // For events across components
-    requestSend () {}
+    requestSend () {},
+    chooseSuggestion () {}
   },
   actions: {
   },
