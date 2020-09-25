@@ -125,6 +125,12 @@ export default {
 
   mounted () {
     this.init()
+
+    this.$store.subscribe(mutation => {
+      if (mutation.type === 'updateSettings') {
+        this.init()
+      }
+    })
   }
 }
 </script>
