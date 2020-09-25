@@ -24,17 +24,17 @@
               <AddWordsOffline/>
             </div>
             <div v-else>
-              <v-tabs :vertical="true">
-                <v-tab>Offline</v-tab>
-                <v-tab>Online</v-tab>
-                <v-tab-item>
+              <v-tabs v-model="vtab" :vertical="true">
+                <v-tab href="#offline">Offline</v-tab>
+                <v-tab href="#online">Online</v-tab>
+                <v-tab-item value="offline">
                   <v-card flat tile>
                     <v-card-text>
                       <AddWordsOffline/>
                     </v-card-text>
                   </v-card>
                 </v-tab-item>
-                <v-tab-item>
+                <v-tab-item value="online">
                   <v-card flat tile>
                     <v-card-text>
                       <AddWordsOnline/>
@@ -67,6 +67,16 @@ export default {
       },
       get () {
         return this.$route.query.tab
+      }
+    },
+    vtab: {
+      set (vtab) {
+        this.$router.replace({
+          query: { ...this.$route.query, vtab }
+        })
+      },
+      get () {
+        return this.$route.query.vtab
       }
     }
   },

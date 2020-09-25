@@ -10,9 +10,8 @@
       class="text-h4"
     >
       <template v-slot:item.action="{ item }">
-        <v-btn depressed :color="item.voted ? 'primary' : 'secondary'" @click="vote(item.id)">
-          <v-icon v-if="item.voted">mdi-arrow-down-box</v-icon>
-          <v-icon v-else>mdi-arrow-up-box</v-icon>
+        <v-btn depressed :color="item.voted ? 'primary' : ''" @click="vote(item.id)" title="Vote" aria-label="Vote suggestion">
+          <v-icon>mdi-arrow-up-box</v-icon>
           {{ item.votes }}
         </v-btn>
       </template>
