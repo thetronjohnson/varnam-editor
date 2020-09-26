@@ -74,6 +74,8 @@ export default {
 
   methods: {
     init () {
+      // Remember: CORS to remote server won't work in localhost pages
+      // https://stackoverflow.com/questions/10883211/deadly-cors-when-http-localhost-is-the-origin
       fetch(this.$VARNAM_REVIEW_URL + '/suggestions?lang=' + this.$store.state.settings.lang)
         .then(response => response.json())
         .then(data => {
