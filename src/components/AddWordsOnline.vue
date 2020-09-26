@@ -10,7 +10,7 @@
       class="text-h4"
     >
       <template v-slot:item.action="{ item }">
-        <v-btn depressed :color="item.voted ? 'primary' : ''" @click="vote(item.id)" title="Vote" aria-label="Vote suggestion">
+        <v-btn depressed :color="item.voted ? 'primary' : ''" @click="vote(item._id)" title="Vote" aria-label="Vote suggestion">
           <v-icon>mdi-arrow-up-box</v-icon>
           {{ item.votes }}
         </v-btn>
@@ -101,7 +101,7 @@ export default {
     },
 
     vote (sid) {
-      const suggestionItem = this.words.find(item => item.id === sid)
+      const suggestionItem = this.words.find(item => item._id === sid)
 
       fetch(this.$VARNAM_REVIEW_URL + '/suggestions/vote', {
         method: 'POST',
