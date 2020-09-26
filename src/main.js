@@ -6,15 +6,16 @@ import vuetify from './plugins/vuetify'
 
 Vue.config.productionTip = false
 
+// Offline-first, so keep this value true, and the next URLs localhost on commit
 // Is this editor running offline on a system and not the website
-window.$VARNAM_OFFLINE = false
+window.$VARNAM_OFFLINE = true
 
 // No trailing slash
 window.$VARNAM_API_URL = 'http://127.0.0.1:8123'
 // window.$VARNAM_API_URL = 'https://api.varnamproject.com'
 
-// window.$VARNAM_REVIEW_URL = 'http://127.0.0.1:3000'
-window.$VARNAM_REVIEW_URL = 'https://kde.smc.org.in:8124'
+window.$VARNAM_REVIEW_URL = 'http://127.0.0.1:3000'
+// window.$VARNAM_REVIEW_URL = 'https://kde.smc.org.in:8124'
 
 Vue.prototype.$VARNAM_OFFLINE = window.$VARNAM_OFFLINE
 Vue.prototype.$VARNAM_API_URL = window.$VARNAM_API_URL
