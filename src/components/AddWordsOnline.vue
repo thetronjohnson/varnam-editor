@@ -92,7 +92,7 @@ export default {
         body: JSON.stringify(wordInfo)
       })
         .then(_ => {
-          this.snackbarText = 'Word was addedd successfully'
+          this.snackbarText = 'Suggestion was addedd successfully'
           this.snackbarDisplay = true
           this.init()
         })
