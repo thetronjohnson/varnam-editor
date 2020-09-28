@@ -113,13 +113,15 @@
 <script>
 import AddWordForm from '@/components/AddWordForm.vue'
 import ImportFromFile from '@/components/ImportFromFile.vue'
+import ImportFromOnline from '@/components/ImportFromOnline.vue'
 
 export default {
   name: 'AddWordsOffline',
 
   components: {
     AddWordForm,
-    ImportFromFile
+    ImportFromFile,
+    ImportFromOnline
   },
 
   computed: {
