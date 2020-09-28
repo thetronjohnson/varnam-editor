@@ -82,7 +82,7 @@ export default {
           value: 'size'
         }
       ],
-      items: [
+      packs: [
         {
           identifier: 'ml-basic',
           name: 'Malayalam Basic',
@@ -90,11 +90,13 @@ export default {
           lang: 'ml',
           versions: [
             {
+              identifier: 'ml-basic-1',
               version: '1',
               description: 'Most common words found across many sources',
               size: 10
             },
             {
+              identifier: 'ml-basic-2',
               version: '2',
               description: 'Some new-gen words from 2020',
               size: 1
@@ -108,6 +110,7 @@ export default {
           lang: 'ml',
           versions: [
             {
+              identifier: 'ml-twitter-1',
               version: '1',
               description: 'Most common words found across many sources',
               size: 10
@@ -121,6 +124,7 @@ export default {
           lang: 'ml',
           versions: [
             {
+              identifier: 'ml-english-1',
               version: '1',
               description: 'Basic words like "try", "last", "first" and many more sourced from social media.',
               size: 10
@@ -135,18 +139,6 @@ export default {
   },
 
   computed: {
-    packs () {
-      return this.items.map((item, index) => {
-        item.versions = item.versions.map(versionItem => {
-          versionItem.packID = item.identifier
-          versionItem.id = item.identifier + versionItem.version
-
-          return versionItem
-        })
-        return item
-      })
-    },
-
     downloadBtnDisabled () {
       return this.packsVersionsSelected.length === 0
     }
