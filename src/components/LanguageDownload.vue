@@ -57,6 +57,10 @@ export default {
       return !this.selectedLangs.find(item => this.langsDownloadable.indexOf(item.Identifier) > -1)
     },
 
+    upstreamURL () {
+      return this.$store.state.upstreamURL
+    },
+
     langsInstalled () {
       return this.$store.state.langs
     },
@@ -107,7 +111,7 @@ export default {
 
   methods: {
     init () {
-      window.fetch(this.$VARNAM_UPSTREAM_URL + '/languages')
+      window.fetch(this.upstreamURL + '/languages')
         .then(response => response.json())
         .then(languages => {
           this.langs = languages
@@ -154,8 +158,13 @@ export default {
     }
   },
 
-  mounted () {
+  created () {
     this.init()
+    this.$store.subscribe(mutation => {
+      if (mutation.type === 'setUpstream') {
+        this.init()
+      }
+    })
   }
 }
 </script>

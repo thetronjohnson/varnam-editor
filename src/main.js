@@ -17,13 +17,9 @@ window.$VARNAM_API_URL = 'http://127.0.0.1:8123'
 window.$VARNAM_REVIEW_URL = 'http://127.0.0.1:3000'
 // window.$VARNAM_REVIEW_URL = 'https://kde.smc.org.in:8124'
 
-window.$VARNAM_UPSTREAM_URL = 'https://api.varnamproject.com'
-// window.$VARNAM_UPSTREAM_URL = 'http://127.0.0.1:8124'
-
 Vue.prototype.$VARNAM_OFFLINE = window.$VARNAM_OFFLINE
 Vue.prototype.$VARNAM_API_URL = window.$VARNAM_API_URL
 Vue.prototype.$VARNAM_REVIEW_URL = window.$VARNAM_REVIEW_URL
-Vue.prototype.$VARNAM_UPSTREAM_URL = window.$VARNAM_UPSTREAM_URL
 
 window.fetch(window.$VARNAM_API_URL + '/languages')
   .then(response => response.json())
@@ -32,6 +28,15 @@ window.fetch(window.$VARNAM_API_URL + '/languages')
   })
 
 store.commit('initSettings')
+
+if (window.$VARNAM_OFFLINE) {
+  // set upstream url. this allows varnam-desktop's config.toml value to be here
+  window.fetch(window.$VARNAM_API_URL + '/get/upstream-url')
+    .then(response => response.text())
+    .then(url => {
+      store.commit('setUpstream', url)
+    })
+}
 
 // any change to IndexedDB schema should be
 // reflected here with a version update

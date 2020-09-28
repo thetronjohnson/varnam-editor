@@ -13,6 +13,10 @@ export default new Vuex.Store({
     // https://api.varnamproject.com/languages
     langs: [],
 
+    // set upstream varnamd URL
+    // https://api.varnamproject.com/
+    upstreamURL: '',
+
     // Suggestions to display
     suggestionsDisplay: [],
 
@@ -89,6 +93,10 @@ export default new Vuex.Store({
       if (langs.length === 0) {
         state.setupDialog = true
       }
+    },
+
+    setUpstream (state, url) {
+      state.upstreamURL = url
     },
 
     setIDBWords (state, wordsArray) {
