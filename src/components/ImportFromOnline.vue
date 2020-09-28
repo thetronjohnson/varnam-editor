@@ -82,7 +82,7 @@ export default {
           value: 'size'
         }
       ],
-      items: [
+      packs: [
         {
           identifier: 'ml-basic',
           name: 'Malayalam Basic',
