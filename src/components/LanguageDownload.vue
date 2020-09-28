@@ -20,7 +20,10 @@
         :items-per-page="20"
       >
         <template v-slot:item.installed="{ item }">
-          <v-icon color="success" v-if="langsInstalled.find(k => k.Identifier === item.Identifier)" title="Installed" aria-label="Installed">mdi-checkbox-blank-circle</v-icon>
+          <div v-if="langsInstalled.find(k => k.Identifier === item.Identifier)">
+            <v-icon :color="langsDownloadable.indexOf(item.Identifier) > -1 ? 'warning' : 'success'" title="Installed" aria-label="Installed">mdi-checkbox-blank-circle</v-icon>
+            {{ langsInstalled.find(k => k.Identifier === item.Identifier).CompiledDate.split(' ')[0] }}
+          </div>
         </template>
       </v-data-table>
     </v-card-text>
@@ -38,16 +41,26 @@ export default {
 
     langsInstalled () {
       return this.$store.state.langs
+    },
+
+    // Langs that are not installed and updatable
+    langsDownloadable () {
+      const langs = this.langs.filter(item => {
+        const installedLang = this.langsInstalled.find(item2 => item2.Identifier === item.Identifier)
+
+        if (installedLang) {
+          return item.CompiledDate > installedLang.CompiledDate
+        } else {
+          return true
+        }
+      })
+      return langs.reduce((langs, langInfo) => langs.concat(langInfo.Identifier), [])
     }
   },
 
   data: () => {
     return {
       headers: [
-        {
-          text: '',
-          value: 'installed'
-        },
         {
           text: 'Name',
           value: 'DisplayName'
@@ -57,12 +70,15 @@ export default {
           value: 'Author'
         },
         {
-          text: 'Last Updated',
+          text: 'Updated',
           value: 'CompiledDate'
+        },
+        {
+          text: 'Installed',
+          value: 'installed'
         }
       ],
       langs: [],
-      langsDownloadable: [], // Langs that are not installed and updatable
       selectedLangs: []
     }
   },
@@ -73,16 +89,6 @@ export default {
         .then(response => response.json())
         .then(languages => {
           this.langs = languages
-          this.langsDownloadable = languages.filter(item => {
-            const installedLang = this.langsInstalled.find(item2 => item2.Identifier === item.Identifier)
-
-            if (installedLang) {
-              return item.Updated !== installedLang.Updated
-            } else {
-              return true
-            }
-          })
-          this.langsDownloadable = this.langsDownloadable.reduce((langs, langInfo) => langs.concat(langInfo.Identifier), [])
         })
     },
 
