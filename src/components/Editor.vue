@@ -85,15 +85,19 @@ export default {
   data () {
     return {
       inputText: '',
-      alternateWords: [],
-
-      setupDialog: false
+      alternateWords: []
     }
   },
 
   computed: {
-    langs: function () {
-      return this.$store.state.langs
+    setupDialog: {
+      get () {
+        return this.$store.state.setupDialog
+      },
+
+      set () {
+        this.$store.commit('hideSetupDialog')
+      }
     },
 
     lang: function () {
@@ -107,11 +111,6 @@ export default {
 
   methods: {
     init () {
-      if (this.langs.length === 0) {
-        this.setupDialog = true
-        return
-      }
-
       input = this.$refs.editor.$el.getElementsByTagName('textarea')[0]
 
       input.addEventListener('keyup', (e) => {

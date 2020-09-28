@@ -7,6 +7,8 @@ export default new Vuex.Store({
   state: {
     currentWord: 0, // Word ID
 
+    setupDialog: false,
+
     // Detailed info of all the schemes
     // https://api.varnamproject.com/languages
     langs: [],
@@ -83,6 +85,10 @@ export default new Vuex.Store({
       // Sort by identifier
       langs.sort((a, b) => a.Identifier.localeCompare(b.Identifier))
       state.langs = langs
+
+      if (langs.length === 0) {
+        state.setupDialog = true
+      }
     },
 
     setIDBWords (state, wordsArray) {
@@ -93,6 +99,10 @@ export default new Vuex.Store({
         words[item.pattern] = item.word
       })
       state.idbWords = words
+    },
+
+    hideSetupDialog (state) {
+      state.setupDialog = false
     },
 
     // Event Bus
