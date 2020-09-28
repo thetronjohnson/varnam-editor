@@ -13,11 +13,8 @@
             Words
           </v-tab>
           <v-tab-item value="editor">
-            <v-card flat tile>
-              <v-card-text>
-                <EditorSettings />
-              </v-card-text>
-            </v-card>
+            <EditorSettings />
+            <LanguageDownload v-if="$VARNAM_OFFLINE" />
           </v-tab-item>
           <v-tab-item value="words">
             <div v-if="$VARNAM_OFFLINE">
@@ -54,9 +51,17 @@
 import AddWordsOnline from '@/components/AddWordsOnline.vue'
 import AddWordsOffline from '@/components/AddWordsOffline.vue'
 import EditorSettings from '@/components/EditorSettings.vue'
+import LanguageDownload from '@/components/LanguageDownload.vue'
 
 export default {
   name: 'Settings',
+
+  components: {
+    AddWordsOnline,
+    AddWordsOffline,
+    EditorSettings,
+    LanguageDownload
+  },
 
   computed: {
     tab: {
@@ -79,12 +84,6 @@ export default {
         return this.$route.query.vtab
       }
     }
-  },
-
-  components: {
-    AddWordsOnline,
-    AddWordsOffline,
-    EditorSettings
   }
 }
 </script>
