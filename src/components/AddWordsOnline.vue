@@ -4,7 +4,6 @@
     <v-data-table
       :headers="headers"
       :items.sync="words"
-      :items-per-page="5"
       sort-by="votes"
       sort-desc
       class="text-h4"
