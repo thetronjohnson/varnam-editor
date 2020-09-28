@@ -10,6 +10,29 @@
       :autofocus="true"
       :style="`font-size: ${$store.state.settings.fontSize}px`"
     ></v-textarea>
+    <v-dialog
+      v-model="setupDialog"
+      persistent
+      max-width="500"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          No Varnam Languages Found
+        </v-card-title>
+        <v-card-text>Varnam couldn't find any languages set up. This looks like a first install. Set up languages to use Varnam.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+            to="/settings"
+            @click="setupDialog = false"
+          >
+            Set Up Languages
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -62,15 +85,21 @@ export default {
   data () {
     return {
       inputText: '',
+      alternateWords: [],
 
-      alternateWords: []
+      setupDialog: false
     }
   },
 
   computed: {
+    langs: function () {
+      return this.$store.state.langs
+    },
+
     lang: function () {
       return this.$store.state.settings.lang
     },
+
     suggestions: function () {
       return this.$store.state.suggestions
     }
@@ -78,6 +107,11 @@ export default {
 
   methods: {
     init () {
+      if (this.langs.length === 0) {
+        this.setupDialog = true
+        return
+      }
+
       input = this.$refs.editor.$el.getElementsByTagName('textarea')[0]
 
       input.addEventListener('keyup', (e) => {

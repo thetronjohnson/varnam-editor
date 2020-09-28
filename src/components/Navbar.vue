@@ -40,9 +40,11 @@
 <script>
 export default {
   name: 'Navbar',
+
   data () {
     return {}
   },
+
   computed: {
     langs: function () {
       const items = []
@@ -54,6 +56,7 @@ export default {
       })
       return items
     },
+
     lang: {
       get () {
         return this.$store.state.settings.lang
