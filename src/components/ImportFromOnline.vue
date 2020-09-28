@@ -7,9 +7,23 @@
       show-expand
       show-select
       v-model="packsSelected"
-      :item-selected="onPacksSelect"
+      @item-selected="onPackSelect"
+      @toggle-select-all="onPackSelectAll"
       class="packsTable"
     >
+      <template v-slot:top>
+        <v-row align="center" justify="right">
+          <v-col l="10">
+            Choose the language packs you need and click download
+          </v-col>
+          <v-col cols="2">
+            <v-btn depressed color="primary" :disabled="downloadBtnDisabled" @click="download" title="Download & Import" aria-label="Download & Import">
+              <v-icon left>mdi-arrow-down-box</v-icon>
+              Download
+            </v-btn>
+          </v-col>
+        </v-row>
+      </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td></td>
         <td :colspan="headers.length">
@@ -18,19 +32,16 @@
             :items.sync="item.versions"
             :hide-default-header="true"
             :hide-default-footer="true"
+            item-key="id"
             show-select
+            v-model="packsVersionsSelected"
+            @item-selected="onPackVersionSelect"
           >
             <template v-slot:item.size="{ item }">
               {{ item.size }} MB
             </template>
           </v-data-table>
         </td>
-      </template>
-      <template v-slot:item.action="{ item }">
-        <v-btn depressed color="primary" @click="download(item.identifier)" title="Download & Import" aria-label="Download & Import">
-          <v-icon>mdi-arrow-down-box</v-icon>
-          Download
-        </v-btn>
       </template>
     </v-data-table>
   </div>
@@ -52,12 +63,6 @@ export default {
           text: 'Description',
           sortable: false,
           value: 'description'
-        },
-        {
-          text: '',
-          sortable: false,
-          value: 'action',
-          width: 10
         }
       ],
       versionHeaders: [
@@ -77,7 +82,7 @@ export default {
           value: 'size'
         }
       ],
-      packs: [
+      items: [
         {
           identifier: 'ml-basic',
           name: 'Malayalam Basic',
@@ -124,12 +129,63 @@ export default {
         }
       ],
 
-      packsSelected: []
+      packsSelected: [],
+      packsVersionsSelected: []
+    }
+  },
+
+  computed: {
+    packs () {
+      return this.items.map((item, index) => {
+        item.versions = item.versions.map(versionItem => {
+          versionItem.packID = item.identifier
+          versionItem.id = item.identifier + versionItem.version
+
+          return versionItem
+        })
+        return item
+      })
+    },
+
+    downloadBtnDisabled () {
+      return this.packsVersionsSelected.length === 0
     }
   },
 
   methods: {
-    onPacksSelect () {
+    onPackSelect (e) {
+      if (e.value) {
+        // checked
+        this.packsVersionsSelected = this.packsVersionsSelected.concat(e.item.versions)
+      } else {
+        const ids = []
+        e.item.versions.forEach(item => ids.push(item.id))
+
+        this.packsVersionsSelected = this.packsVersionsSelected.filter(item => ids.indexOf(item.id) === -1)
+      }
+    },
+
+    onPackVersionSelect (e) {
+      const pack = this.packs.find(item => item.identifier === e.item.packID)
+      const packsVersionsSelected = this.packsVersionsSelected.filter(item => item.packID === e.item.packID)
+
+      // +1 is for the current item selected
+      if (pack.versions.length === packsVersionsSelected.length + (e.value ? 1 : -1)) {
+        this.packsSelected.push(pack)
+      } else {
+        this.packsSelected = this.packsSelected.filter(item => item.identifier !== e.item.packID)
+      }
+    },
+
+    onPackSelectAll (e) {
+      if (e.value) {
+        // Select all
+        const allPacksVersions = this.packs.reduce((combined, item) => combined.concat(item.versions), [])
+        this.packsVersionsSelected = allPacksVersions
+      } else {
+        // Unselect all
+        this.packsVersionsSelected = []
+      }
     }
   }
 }
