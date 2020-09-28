@@ -119,6 +119,7 @@ export default {
 
       langs = langs.reduce((langs, langInfo) => langs.concat(langInfo.Identifier), [])
 
+      let downloadFinishedCount = 0
       langs.forEach(lang => {
         // This is a dekstop only endpoint. Not in varnamd
         window.fetch(this.$VARNAM_API_URL + '/download-language', {
@@ -132,10 +133,15 @@ export default {
         })
           .then(response => {
             if (response.status === 200) {
-              this.snackbarColor = 'secondary'
-              this.snackbarText = 'Language downloaded'
-              this.snackbarDisplay = true
-              window.location.reload()
+              if (++downloadFinishedCount === langs.length) {
+                this.snackbarColor = 'secondary'
+                this.snackbarText = 'All selected languages downloaded. Restart app for changes to take effect.'
+                this.snackbarDisplay = true
+              } else {
+                this.snackbarColor = 'secondary'
+                this.snackbarText = `Language '${lang}' downloaded`
+                this.snackbarDisplay = true
+              }
             } else {
               response.json().then(json => {
                 this.snackbarColor = 'error'
