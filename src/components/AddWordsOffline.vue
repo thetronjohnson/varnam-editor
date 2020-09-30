@@ -42,7 +42,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="3">
-              <v-btn large color="error" @click="deleteWord">
+              <v-btn large color="error" @click="deleteWord()">
                 <v-icon left>mdi-minus</v-icon>
                 Delete Word
               </v-btn>
@@ -185,7 +185,6 @@ export default {
       }
 
       if (this.$VARNAM_OFFLINE) {
-        // TODO send request
         fetch(this.$VARNAM_API_URL + '/train/' + this.$store.state.settings.lang, {
           method: 'POST',
           headers: {
@@ -220,7 +219,27 @@ export default {
 
     deleteWord (id) {
       if (this.$VARNAM_OFFLINE) {
-        // TODO varnamd request
+        fetch(this.$VARNAM_API_URL + '/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            lang: this.$store.state.settings.lang,
+            word: this.wordToDelete
+          })
+        })
+          .then(async response => {
+            if (response.status === 200) {
+              this.snackbarText = `Succesfully deleted word "${this.wordToDelete}"`
+              this.snackbarDisplay = true
+              this.wordToLearn = ''
+            } else {
+              response = await response.json()
+              this.snackbarText = `Error: ${response.message}`
+              this.snackbarDisplay = true
+            }
+          })
       } else {
         this.$VARNAM_IDB.getWordsStore().then(wordsStore => {
           wordsStore.delete(id)
