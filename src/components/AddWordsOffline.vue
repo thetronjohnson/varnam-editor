@@ -186,6 +186,23 @@ export default {
 
       if (this.$VARNAM_OFFLINE) {
         // TODO send request
+        fetch(this.$VARNAM_API_URL + '/train/' + this.$store.state.settings.lang, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            pattern: wordInfo.pattern,
+            word: wordInfo.word
+          })
+        })
+          .then(response => {
+            if (response.status === 200) {
+              this.snackbarText = `Succesfully trained "${wordInfo.pattern}" => "${wordInfo.word}"`
+              this.snackbarDisplay = true
+              this.wordToLearn = ''
+            }
+          })
       } else {
         this.$VARNAM_IDB.getWordsStore().then(wordsStore => {
           const request = wordsStore.add(wordInfo)
