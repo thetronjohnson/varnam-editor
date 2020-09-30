@@ -13,7 +13,7 @@
             clearable
           >
             <template v-slot:append-outer>
-              <v-btn style="top: -12px" large color="primary" @click="deleteWord">
+              <v-btn style="top: -12px" large color="primary" @click="learnWord">
                 <v-icon left>mdi-teach</v-icon>
                 Learn Word
               </v-btn>
@@ -152,6 +152,32 @@ export default {
       }
     },
 
+    learnWord () {
+      const word = this.wordToLearn.trim()
+      if (word === '') {
+        this.snackbarText = 'Some inputs were empty'
+        this.snackbarDisplay = true
+      }
+
+      fetch(this.$VARNAM_API_URL + '/learn', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          lang: this.$store.state.settings.lang,
+          text: word
+        })
+      })
+        .then(response => {
+          if (response.status === 200) {
+            this.snackbarText = `Succesfully learnt word "${word}"`
+            this.snackbarDisplay = true
+            this.wordToLearn = ''
+          }
+        })
+    },
+
     addWord (wordInfo) {
       if (wordInfo.pattern.trim() === '' || wordInfo.word.trim() === '') {
         this.snackbarText = 'Some inputs were empty'
@@ -177,7 +203,7 @@ export default {
 
     deleteWord (id) {
       if (this.$VARNAM_OFFLINE) {
-        // varnamd request
+        // TODO varnamd request
       } else {
         this.$VARNAM_IDB.getWordsStore().then(wordsStore => {
           wordsStore.delete(id)
