@@ -50,6 +50,30 @@
           </v-row>
         </v-card-text>
       </v-card>
+      <v-card rounded outlined>
+        <v-card-title>Import Words</v-card-title>
+        <v-card-subtitle>Import many words to Varnam.</v-card-subtitle>
+        <v-card-text>
+          <v-tabs v-model="vtab" :vertical="true">
+            <v-tab href="#file">File</v-tab>
+            <v-tab href="#online">Online</v-tab>
+            <v-tab-item value="file">
+              <v-card flat tile>
+                <v-card-text>
+                  <ImportFromFile />
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+            <v-tab-item value="online">
+              <v-card flat tile>
+                <v-card-text>
+                  <ImportFromOnline />
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+          </v-tabs>
+        </v-card-text>
+      </v-card>
     </div>
     <div v-else>
       <AddWordForm @addWord="addWord" />
@@ -88,12 +112,14 @@
 
 <script>
 import AddWordForm from '@/components/AddWordForm.vue'
+import ImportFromFile from '@/components/ImportFromFile.vue'
 
 export default {
   name: 'AddWordsOffline',
 
   components: {
-    AddWordForm
+    AddWordForm,
+    ImportFromFile
   },
 
   computed: {
@@ -106,6 +132,17 @@ export default {
         return langInfo.DisplayName
       } else {
         return ''
+      }
+    },
+
+    vtab: {
+      set (vtab) {
+        this.$router.replace({
+          query: { ...this.$route.query, vtab }
+        })
+      },
+      get () {
+        return this.$route.query.vtab
       }
     }
   },
