@@ -1,27 +1,55 @@
 <template>
   <div>
     <div v-if="$VARNAM_OFFLINE">
-      <span class="text-h6">Add Word</span>
-      <AddWordForm @addWord="addWord" />
-      <v-form>
-        <span class="text-h6">Delete Word</span>
-        <v-row cols="12"  align="center">
-          <v-col cols="8">
-            <v-text-field
-              :label="`Word to delete (in ${langName})`"
-              v-model="wordToDelete"
-              :hide-details="true"
-              outlined
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-btn large color="error" @click="deleteWord">
-              <v-icon>mdi-minus</v-icon>
-              Delete Word
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-form>
+      <v-card rounded outlined>
+        <v-card-title>Learn Word</v-card-title>
+        <v-card-subtitle>Varnam will learn this word, make different patterns from it.</v-card-subtitle>
+        <v-card-text>
+          <v-text-field
+            :label="`Word to learn (in ${langName})`"
+            v-model="wordToLearn"
+            :hide-details="true"
+            outlined
+            clearable
+          >
+            <template v-slot:append-outer>
+              <v-btn style="top: -12px" large color="primary" @click="deleteWord">
+                <v-icon left>mdi-teach</v-icon>
+                Learn Word
+              </v-btn>
+            </template>
+          </v-text-field>
+        </v-card-text>
+      </v-card>
+      <v-card rounded outlined>
+        <v-card-title>Train Word</v-card-title>
+        <v-card-subtitle>Ask Varnam to use a particular pattern for a word.</v-card-subtitle>
+        <v-card-text>
+          <AddWordForm @addWord="addWord" />
+        </v-card-text>
+      </v-card>
+      <v-card rounded outlined>
+        <v-card-title>Delete Word</v-card-title>
+        <v-card-subtitle>Varnam will delete this word and all patterns associated with it.</v-card-subtitle>
+        <v-card-text>
+          <v-row cols="12" align="center">
+            <v-col cols="9">
+              <v-text-field
+                :label="`Word to delete (in ${langName})`"
+                v-model="wordToDelete"
+                :hide-details="true"
+                outlined
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-btn large color="error" @click="deleteWord">
+                <v-icon left>mdi-minus</v-icon>
+                Delete Word
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
     </div>
     <div v-else>
       <AddWordForm @addWord="addWord" />
@@ -87,6 +115,7 @@ export default {
       snackbarDisplay: false,
       snackbarText: false,
 
+      wordToLearn: '',
       wordToDelete: '',
 
       headers: [

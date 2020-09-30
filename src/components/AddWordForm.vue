@@ -22,7 +22,7 @@
         </v-col>
         <v-col cols="3">
           <v-btn large color="primary" @click="addWord">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon left>mdi-plus</v-icon>
             Add Word
           </v-btn>
         </v-col>
