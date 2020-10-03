@@ -4,7 +4,7 @@
       <p>Choose a file to import (learn) words from. Can be any text file or files downloaded from <a href="https://varmaproject.com/packs" target="_blank">here.</a></p>
       <v-file-input multiple v-model="files" label="File input"></v-file-input>
       <v-btn color="primary" @click="upload" :disabled="this.files.length === 0">Upload & Import</v-btn>
-    </v-form><br/><br/>
+    </v-form><br/>
     <v-card flat v-show="log.length > 0" :loading="loading">
       <v-card-subtitle>Import Status</v-card-subtitle>
       <v-card-text>
@@ -32,13 +32,12 @@ export default {
     upload () {
       const formData = new FormData()
 
-      formData.append('lang', this.$store.state.settings.lang)
       this.files.forEach(file => formData.append('files', file))
 
       this.log = []
       this.loading = true
 
-      fetch(this.$VARNAM_API_URL + '/learn/upload', {
+      fetch(this.$VARNAM_API_URL + '/learn/upload/' + this.$store.state.settings.lang, {
         method: 'POST',
         body: formData
       })
