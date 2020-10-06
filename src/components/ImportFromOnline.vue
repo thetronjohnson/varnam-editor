@@ -12,7 +12,7 @@
       class="packsTable"
     >
       <template v-slot:top>
-        <v-row align="center" justify="right">
+        <v-row align="center" justify="end">
           <v-col l="10">
             Choose the language packs you need and click download
           </v-col>
@@ -32,7 +32,7 @@
             :items.sync="item.versions"
             :hide-default-header="true"
             :hide-default-footer="true"
-            item-key="id"
+            item-key="identifier"
             show-select
             v-model="packsVersionsSelected"
             @item-selected="onPackVersionSelect"
@@ -82,56 +82,8 @@ export default {
           value: 'size'
         }
       ],
-      packs: [
-        {
-          identifier: 'ml-basic',
-          name: 'Malayalam Basic',
-          description: 'Collection of basic Malayalam words',
-          lang: 'ml',
-          versions: [
-            {
-              identifier: 'ml-basic-1',
-              version: '1',
-              description: 'Most common words found across many sources',
-              size: 10
-            },
-            {
-              identifier: 'ml-basic-2',
-              version: '2',
-              description: 'Some new-gen words from 2020',
-              size: 1
-            }
-          ]
-        },
-        {
-          identifier: 'ml-twitter',
-          name: 'Malayalam Twitter',
-          description: 'Collection of words sourced from Twitter',
-          lang: 'ml',
-          versions: [
-            {
-              identifier: 'ml-twitter-1',
-              version: '1',
-              description: 'Most common words found across many sources',
-              size: 10
-            }
-          ]
-        },
-        {
-          identifier: 'ml-english',
-          name: 'English Words in Malayalam',
-          description: 'Collection of english words written in Malayalam. Eg: KSEB, Facebook',
-          lang: 'ml',
-          versions: [
-            {
-              identifier: 'ml-english-1',
-              version: '1',
-              description: 'Basic words like "try", "last", "first" and many more sourced from social media.',
-              size: 10
-            }
-          ]
-        }
-      ],
+
+      packsFromUpstream: [],
 
       packsSelected: [],
       packsVersionsSelected: []
@@ -141,10 +93,33 @@ export default {
   computed: {
     downloadBtnDisabled () {
       return this.packsVersionsSelected.length === 0
+    },
+
+    upstreamURL () {
+      return this.$store.state.upstreamURL
+    },
+
+    packs () {
+      return this.packsFromUpstream.map((item, index) => {
+        item.versions = item.versions.map(versionItem => {
+          versionItem.packID = item.identifier
+          console.log(versionItem)
+          return versionItem
+        })
+        return item
+      })
     }
   },
 
   methods: {
+    init () {
+      window.fetch(this.upstreamURL + '/packs/' + this.$store.state.settings.lang)
+        .then(response => response.json())
+        .then(packs => {
+          this.packsFromUpstream = packs
+        })
+    },
+
     onPackSelect (e) {
       if (e.value) {
         // checked
@@ -178,7 +153,34 @@ export default {
         // Unselect all
         this.packsVersionsSelected = []
       }
+    },
+
+    download () {
+      this.packsVersionsSelected.forEach(packVersion => {
+        console.log(packVersion)
+        // This is a dekstop only endpoint. Not in varnamd
+        window.fetch(this.$VARNAM_API_URL + '/packs/download', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            lang: this.$store.state.settings.lang,
+            pack: packVersion.packID,
+            version: packVersion.identifier
+          })
+        })
+      })
     }
+  },
+
+  created () {
+    this.init()
+    this.$store.subscribe(mutation => {
+      if (mutation.type === 'setUpstream') {
+        this.init()
+      }
+    })
   }
 }
 </script>
