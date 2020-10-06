@@ -248,10 +248,10 @@ export default {
       }
     },
 
-    download () {
-      this.packsVersionsSelected.forEach(packVersion => {
-        const pid = packVersion.identifier
+    downloadPack (packVersion) {
+      const pid = packVersion.identifier
 
+      return new Promise((resolve, reject) => {
         // This is a dekstop only endpoint. Not in varnamd
         window.fetch(this.$VARNAM_API_URL + '/packs/download', {
           method: 'POST',
@@ -265,12 +265,12 @@ export default {
           })
         })
           .then(async response => {
-            if (response.status === 200) {
-              this.$set(this.log, pid, {
-                loading: true,
-                log: []
-              })
+            this.$set(this.log, pid, {
+              loading: true,
+              log: []
+            })
 
+            if (response.status === 200) {
               const reader = response.body.getReader()
 
               // "done" is a Boolean and value a "Uint8Array"
@@ -288,6 +288,7 @@ export default {
                     color: 'success'
                   })
                   this.packsInstalled.push(packVersion.identifier)
+                  resolve()
                 } else {
                   // Read some more, and call this function again
                   return reader.read().then(processResponse)
@@ -302,8 +303,19 @@ export default {
               this.$toast(json.message, {
                 color: 'error'
               })
+
+              this.$set(this.log[pid], 'loading', false)
+              this.$set(this.log[pid].log, this.log[pid].log.length, json.message)
+
+              reject(new Error(json.message))
             }
           })
+      })
+    },
+
+    download () {
+      this.packsVersionsSelected.forEach(async packVersion => {
+        await this.downloadPack(packVersion)
       })
     }
   },
