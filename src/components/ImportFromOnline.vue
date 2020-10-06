@@ -24,6 +24,21 @@
           </v-col>
         </v-row>
       </template>
+      <template v-slot:item.data-table-select="{ item, isSelected, select }">
+        <v-icon
+          v-if="item.installed"
+          color="success"
+          title="Installed"
+          aria-label="Installed"
+        >mdi-checkbox-blank-circle</v-icon>
+        <div v-else>
+          <v-simple-checkbox
+            :ripple="false"
+            :value="isSelected"
+            @input="select($event)"
+          ></v-simple-checkbox>
+        </div>
+      </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td></td>
         <td :colspan="headers.length">
@@ -37,6 +52,21 @@
             v-model="packsVersionsSelected"
             @item-selected="onPackVersionSelect"
           >
+            <template v-slot:item.data-table-select="{ item, isSelected, select }">
+              <v-icon
+                v-if="item.installed"
+                color="success"
+                title="Installed"
+                aria-label="Installed"
+              >mdi-checkbox-blank-circle</v-icon>
+              <div v-else>
+                <v-simple-checkbox
+                  :ripple="false"
+                  :value="isSelected"
+                  @input="select($event)"
+                ></v-simple-checkbox>
+              </div>
+            </template>
             <template v-slot:item.size="{ item }">
               {{ item.size }} MB
             </template>
@@ -44,12 +74,36 @@
         </td>
       </template>
     </v-data-table>
+    <v-tabs
+      v-if="Object.keys(log).length > 0"
+      v-model="logTab"
+    >
+      <v-tab
+        v-for="(logItem, identifier) in log"
+        :key="identifier"
+      >
+        {{ identifier }}
+      </v-tab>
+      <v-tab-item
+        v-for="(logItem, identifier) in log"
+        :key="identifier"
+      >
+        <v-card flat :loading="logItem.loading">
+          <v-card-subtitle>Import Status</v-card-subtitle>
+          <v-card-text>
+            <ul>
+              <li v-for="(l, index) in logItem.log" :key="index">{{ l }}</li>
+            </ul>
+          </v-card-text>
+        </v-card>
+      </v-tab-item>
+    </v-tabs>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ImportFromFile',
+  name: 'ImportFromOnline',
 
   data () {
     return {
@@ -83,6 +137,11 @@ export default {
         }
       ],
 
+      log: {},
+      logLoading: false,
+      logTab: 0,
+
+      packsInstalled: [],
       packsFromUpstream: [],
 
       packsSelected: [],
@@ -101,11 +160,19 @@ export default {
 
     packs () {
       return this.packsFromUpstream.map((item, index) => {
+        let installedVersions = 0
+
         item.versions = item.versions.map(versionItem => {
           versionItem.packID = item.identifier
-          console.log(versionItem)
+
+          versionItem.installed = this.packsInstalled.indexOf(versionItem.identifier) > -1
+          if (versionItem.installed) installedVersions++
+
           return versionItem
         })
+
+        item.installed = installedVersions === item.versions.length
+
         return item
       })
     }
@@ -113,6 +180,30 @@ export default {
 
   methods: {
     init () {
+      // This will give the installed packs
+      window.fetch(this.$VARNAM_API_URL + '/packs/' + this.$store.state.settings.lang)
+        .then(async response => {
+          const json = await response.json()
+          if (response.status === 200) {
+            // Get an array of installed packs' identifier
+            this.packsInstalled = json.reduce((acc, item) => {
+              return acc.concat(item.versions.reduce((acc2, item2) => {
+                acc2.push(item2.identifier)
+                return acc2
+              }, []))
+            }, [])
+          } else {
+            this.$toast('Local: ' + json.message, {
+              color: 'error'
+            })
+          }
+
+          this.fetchPacksFromUpstream()
+        })
+    },
+
+    fetchPacksFromUpstream () {
+      // Fetch available packs from upstream
       window.fetch(this.upstreamURL + '/packs/' + this.$store.state.settings.lang)
         .then(response => response.json())
         .then(packs => {
@@ -123,7 +214,7 @@ export default {
     onPackSelect (e) {
       if (e.value) {
         // checked
-        this.packsVersionsSelected = this.packsVersionsSelected.concat(e.item.versions)
+        this.packsVersionsSelected = this.packsVersionsSelected.concat(e.item.versions.filter(item => !item.installed))
       } else {
         const ids = []
         e.item.versions.forEach(item => ids.push(item.id))
@@ -136,8 +227,10 @@ export default {
       const pack = this.packs.find(item => item.identifier === e.item.packID)
       const packsVersionsSelected = this.packsVersionsSelected.filter(item => item.packID === e.item.packID)
 
+      const availableVersions = pack.versions.filter(item => !item.installed)
+
       // +1 is for the current item selected
-      if (pack.versions.length === packsVersionsSelected.length + (e.value ? 1 : -1)) {
+      if (availableVersions.length === packsVersionsSelected.length + (e.value ? 1 : -1)) {
         this.packsSelected.push(pack)
       } else {
         this.packsSelected = this.packsSelected.filter(item => item.identifier !== e.item.packID)
@@ -157,7 +250,8 @@ export default {
 
     download () {
       this.packsVersionsSelected.forEach(packVersion => {
-        console.log(packVersion)
+        const pid = packVersion.identifier
+
         // This is a dekstop only endpoint. Not in varnamd
         window.fetch(this.$VARNAM_API_URL + '/packs/download', {
           method: 'POST',
@@ -167,9 +261,49 @@ export default {
           body: JSON.stringify({
             lang: this.$store.state.settings.lang,
             pack: packVersion.packID,
-            version: packVersion.identifier
+            version: pid
           })
         })
+          .then(async response => {
+            if (response.status === 200) {
+              this.$set(this.log, pid, {
+                loading: true,
+                log: []
+              })
+
+              const reader = response.body.getReader()
+
+              // "done" is a Boolean and value a "Uint8Array"
+              const processResponse = ({ done, value }) => {
+                const items = new TextDecoder('utf-8')
+                  .decode(value)
+                  .split('\n')
+                  .filter(item => item.length !== 0)
+
+                items.forEach(item => this.$set(this.log[pid].log, this.log[pid].log.length, item))
+
+                if (done) {
+                  this.$set(this.log[pid], 'loading', false)
+                  this.$toast('Successfully imported pack', {
+                    color: 'success'
+                  })
+                  this.packsInstalled.push(packVersion.identifier)
+                } else {
+                  // Read some more, and call this function again
+                  return reader.read().then(processResponse)
+                }
+              }
+
+              // read() returns a promise that resolves
+              // when a value has been received
+              reader.read().then(processResponse)
+            } else {
+              const json = await response.json()
+              this.$toast(json.message, {
+                color: 'error'
+              })
+            }
+          })
       })
     }
   },
@@ -178,7 +312,7 @@ export default {
     this.init()
     this.$store.subscribe(mutation => {
       if (mutation.type === 'setUpstream') {
-        this.init()
+        this.fetchPacksFromUpstream()
       }
     })
   }
