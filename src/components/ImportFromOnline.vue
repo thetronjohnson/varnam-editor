@@ -192,6 +192,8 @@ export default {
                 return acc2
               }, []))
             }, [])
+          } else if (response.status === 404) {
+            this.packsInstalled = []
           } else {
             this.$toast('Local: ' + json.message, {
               color: 'error'
@@ -207,7 +209,11 @@ export default {
       window.fetch(this.upstreamURL + '/packs/' + this.$store.state.settings.lang)
         .then(response => response.json())
         .then(packs => {
-          this.packsFromUpstream = packs
+          if (packs instanceof Array) {
+            this.packsFromUpstream = packs
+          } else {
+            this.packsFromUpstream = []
+          }
         })
     },
 
@@ -325,6 +331,16 @@ export default {
     this.$store.subscribe(mutation => {
       if (mutation.type === 'setUpstream') {
         this.fetchPacksFromUpstream()
+      }
+    })
+  },
+
+  mounted () {
+    this.init()
+
+    this.$store.subscribe(mutation => {
+      if (mutation.type === 'updateSettings') {
+        this.init()
       }
     })
   }

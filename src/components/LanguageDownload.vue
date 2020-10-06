@@ -3,7 +3,10 @@
     <v-card flat tile>
       <v-card-title>Languages</v-card-title>
       <v-card-actions>
-        <p>Choose languages you want and click Download</p>
+        <p>
+          Choose languages you want and click Download.
+          You can also download these from <a target="_blank" href="https://varnamproject.com/downloads">here</a>.
+        </p>
         <v-spacer />
         <v-btn depressed color="primary" :disabled="downloadBtnDisabled" @click="download" title="Download & Import" aria-label="Download & Import">
           <v-icon left>mdi-arrow-down-box</v-icon>
