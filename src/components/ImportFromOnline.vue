@@ -240,7 +240,7 @@ export default {
     onPackSelectAll (e) {
       if (e.value) {
         // Select all
-        const allPacksVersions = this.packs.reduce((combined, item) => combined.concat(item.versions), [])
+        const allPacksVersions = this.packs.reduce((combined, item) => combined.concat(item.versions.filter(item => !item.installed)), [])
         this.packsVersionsSelected = allPacksVersions
       } else {
         // Unselect all
