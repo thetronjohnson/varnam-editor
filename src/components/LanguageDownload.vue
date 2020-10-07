@@ -25,7 +25,18 @@
         >
           <template v-slot:item.installed="{ item }">
             <div v-if="langsInstalled.find(k => k.Identifier === item.Identifier)">
-              <v-icon :color="langsDownloadable.indexOf(item.Identifier) > -1 ? 'warning' : 'success'" title="Installed" aria-label="Installed">mdi-checkbox-blank-circle</v-icon>
+              <v-icon
+                v-if="langsDownloadable.indexOf(item.Identifier) > -1"
+                color="warning"
+                title="Update available"
+                aria-label="Update available"
+              >mdi-checkbox-blank-circle</v-icon>
+              <v-icon
+                v-else
+                color="success"
+                title="Installed"
+                aria-label="Installed"
+              >mdi-checkbox-blank-circle</v-icon>
               {{ langsInstalled.find(k => k.Identifier === item.Identifier).CompiledDate.split(' ')[0] }}
             </div>
           </template>
@@ -142,24 +153,23 @@ export default {
             lang
           })
         })
-          .then(response => {
+          .then(async response => {
             this.loading = false
 
             if (response.status === 200) {
               if (++downloadFinishedCount === langs.length) {
-                this.snackbarColor = 'secondary'
-                this.snackbarText = 'All selected languages downloaded. Restart app for changes to take effect.'
-                this.snackbarDisplay = true
+                this.$toast('All selected languages downloaded. Restart app for changes to take effect.', {
+                  color: 'secondary'
+                })
               } else {
-                this.snackbarColor = 'secondary'
-                this.snackbarText = `Language '${lang}' downloaded`
-                this.snackbarDisplay = true
+                this.$toast(`Language '${lang}' downloaded`, {
+                  color: 'secondary'
+                })
               }
             } else {
-              response.json().then(json => {
-                this.snackbarColor = 'error'
-                this.snackbarText = json.message
-                this.snackbarDisplay = true
+              response = await response.json()
+              this.$toast(response.message, {
+                color: 'error'
               })
             }
           })
