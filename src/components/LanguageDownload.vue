@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card flat tile>
+    <v-card flat tile :loading="loading">
       <v-card-title>Languages</v-card-title>
       <v-card-actions>
         <p>
@@ -89,6 +89,8 @@ export default {
       snackbarDisplay: false,
       snackbarText: false,
 
+      loading: false,
+
       headers: [
         {
           text: 'Name',
@@ -128,6 +130,8 @@ export default {
 
       let downloadFinishedCount = 0
       langs.forEach(lang => {
+        this.loading = true
+
         // This is a dekstop only endpoint. Not in varnamd
         window.fetch(this.$VARNAM_API_URL + '/download-language', {
           method: 'POST',
@@ -139,6 +143,8 @@ export default {
           })
         })
           .then(response => {
+            this.loading = false
+
             if (response.status === 200) {
               if (++downloadFinishedCount === langs.length) {
                 this.snackbarColor = 'secondary'
