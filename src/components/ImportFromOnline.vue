@@ -68,7 +68,7 @@
               </div>
             </template>
             <template v-slot:item.size="{ item }">
-              {{ item.size | formatSize }} MB
+              {{ item.size | formatSize }}
             </template>
           </v-data-table>
         </td>
@@ -133,7 +133,7 @@ export default {
         {
           text: 'Size',
           sortable: false,
-          value: 'size'
+          value: 'size' // in bytes
         }
       ],
 
@@ -181,9 +181,12 @@ export default {
   methods: {
     init () {
       // This will give the installed packs
-      window.fetch(this.$VARNAM_API_URL + '/packs/' + this.$store.state.settings.lang)
+      window.fetch(window.$VARNAM_API_URL + '/packs/' + this.$store.state.settings.lang)
         .then(async response => {
+          this.fetchPacksFromUpstream()
+
           const json = await response.json()
+
           if (response.status === 200) {
             // Get an array of installed packs' identifier
             this.packsInstalled = json.reduce((acc, item) => {
@@ -199,8 +202,6 @@ export default {
               color: 'error'
             })
           }
-
-          this.fetchPacksFromUpstream()
         })
     },
 
