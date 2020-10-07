@@ -68,7 +68,7 @@
               </div>
             </template>
             <template v-slot:item.size="{ item }">
-              {{ item.size }} MB
+              {{ item.size | formatSize }} MB
             </template>
           </v-data-table>
         </td>
