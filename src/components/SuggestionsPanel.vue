@@ -9,7 +9,7 @@
       >
         <v-card class="word-card d-flex align-center" outlined>
           <v-btn depressed class="sug-id" color="primary">1</v-btn>
-          <div class="flex-grow-1 sug-word v-skeleton-loader__bone v-skeleton-loader__list-item-avatar">
+          <div class="flex-grow-1 sug-word v-skeleton-loader__bone">
             <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
           </div>
         </v-card>
@@ -78,10 +78,11 @@ export default {
   background:#fff;
 }
 .v-btn.sug-id {
-  padding: 1.5rem;
+  padding: 1rem;
   min-width: 0;
 }
 .sug-word {
   padding: 0 1rem 0 0.5rem;
+  margin-bottom: -6px;
 }
 </style>
