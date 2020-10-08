@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .title {
   justify-content: center;
   color: #4c5df5;
@@ -78,11 +78,13 @@ export default {
   background:#fff;
 }
 .v-btn.sug-id {
-  padding: 1rem;
   min-width: 0;
 }
 .sug-word {
   padding: 0 1rem 0 0.5rem;
-  margin-bottom: -6px;
+
+  .v-skeleton-loader__text {
+    margin-bottom: 0;
+  }
 }
 </style>
