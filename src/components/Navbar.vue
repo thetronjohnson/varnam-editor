@@ -7,8 +7,8 @@
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-row align="center" justify="end" class="d-inline-flex">
-        <v-col lg="2" sm="6">
+      <v-row align="center" justify="end" class="d-inline-flex mr-md-1" dense>
+        <v-col lg="3" md="4" sm="6">
           <v-select
             :items="langs"
             :hide-details="true"
@@ -18,7 +18,7 @@
             dense
           ></v-select>
         </v-col>
-        <v-col lg="2" sm="4">
+        <v-col lg="2" md="3" sm="4">
           <div v-if="$route.name == 'Home'">
             <v-btn to="/settings" color="primary" depressed>
               <v-icon>mdi-cog</v-icon>
