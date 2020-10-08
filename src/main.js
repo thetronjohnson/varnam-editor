@@ -38,6 +38,26 @@ if (window.$VARNAM_OFFLINE) {
     })
 }
 
+Vue.prototype.$LINK_OPEN_CLICK = function (e) {}
+
+// This condition becomes true in Go's webview (varnam-desktop)
+if (typeof window.$OPEN_EXTERNAL !== 'undefined') {
+  // <a href></a> click
+  Vue.prototype.$LINK_OPEN_CLICK = function (e) {
+    const url = e.target.href
+
+    // This function is a call to Go's webview
+    window.$OPEN_EXTERNAL(url)
+  }
+
+  // For webview to reload
+  window.addEventListener('keyup', function (e) {
+    if (e.keyCode === 116 && e.target) {
+      window.location.reload(true)
+    }
+  })
+}
+
 // any change to IndexedDB schema should be
 // reflected here with a version update
 const VARNAM_INDEXEDDB_VERSION = 1
