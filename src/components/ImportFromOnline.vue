@@ -259,6 +259,11 @@ export default {
       const pid = packVersion.identifier
 
       return new Promise((resolve, reject) => {
+        this.$set(this.log, pid, {
+          loading: true,
+          log: ['Downloading pack...']
+        })
+
         // This is a dekstop only endpoint. Not in varnamd
         window.fetch(this.$VARNAM_API_URL + '/packs/download', {
           method: 'POST',
@@ -272,11 +277,6 @@ export default {
           })
         })
           .then(async response => {
-            this.$set(this.log, pid, {
-              loading: true,
-              log: []
-            })
-
             if (response.status === 200) {
               const reader = response.body.getReader()
 
