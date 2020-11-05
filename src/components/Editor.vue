@@ -63,7 +63,6 @@ let input
 
 const transliterateTimeout = []
 const fetchController = []
-const wordsToReplace = []
 
 // Thanks vsync
 // https://stackoverflow.com/a/13335359/1372424
@@ -164,7 +163,14 @@ export default {
                 clearTimeout(transliterateTimeout[wordID])
 
                 transliterateTimeout[wordID] = setTimeout(() => {
-                  this.transliterate(word, wordID)
+                  this.transliterate(word, wordID, (word, wordID, suggestions) => {
+                    this.$store.commit('setSuggestions', {
+                      id: wordID,
+                      suggestions
+                    })
+
+                    this.$store.commit('displaySuggestions', suggestions)
+                  })
                   delete transliterateTimeout[wordID]
                 }, 500)
                 // }
@@ -244,9 +250,11 @@ export default {
       return text.substr(start, end - start)
     },
 
-    replaceWordOnSuggestion (position) {
-      const wordID = position[2]
-      wordsToReplace[wordID] = position
+    replaceWordOnSuggestion (wordPosition) {
+      const wordID = wordPosition[2]
+      this.transliterate(this.getChunk(wordPosition), wordID, (word, wordID, suggestions) => {
+        this.replaceWord(wordPosition, suggestions, 1)
+      })
     },
 
     replaceWord (position, suggestions, suggestionIndex) {
@@ -330,10 +338,13 @@ export default {
       }
     },
 
-    transliterate (word, wordID) {
+    transliterate (word, wordID, onSuggestionsReceive) {
+      let suggestions = [word] // first suggestion will be the typed word
+
       if (!this.$VARNAM_OFFLINE && this.$store.state.idbWords[word]) {
         // First, check IndexedDB
-        this.onSuggestionsReceive(word, wordID, [this.$store.state.idbWords[word]])
+        suggestions = suggestions.concat(this.$store.state.idbWords[word])
+        onSuggestionsReceive(word, wordID, suggestions)
       } else {
         fetchController[wordID] = new AbortController()
 
@@ -348,33 +359,11 @@ export default {
         )
           .then(response => response.json())
           .then(data => {
-            this.onSuggestionsReceive(word, wordID, data.result)
+            suggestions = suggestions.concat(data.result)
+            onSuggestionsReceive(word, wordID, suggestions)
 
             delete fetchController[wordID]
           })
-      }
-    },
-
-    onSuggestionsReceive (word, wordID, suggestions) {
-      this.$store.commit('setSuggestions', {
-        id: wordID,
-        word: word,
-        suggestions
-      })
-
-      const suggestionsWithEnglishFirst = [
-        ...[word],
-        ...suggestions
-      ]
-
-      this.$store.commit('displaySuggestions', suggestionsWithEnglishFirst)
-
-      if (wordsToReplace[wordID]) {
-        const wordPosition = wordsToReplace[wordID]
-        if (this.getChunk(wordPosition) === word) {
-          this.replaceWord(wordPosition, suggestionsWithEnglishFirst, 1)
-        }
-        delete wordsToReplace[wordID]
       }
     },
 

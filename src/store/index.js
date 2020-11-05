@@ -22,7 +22,10 @@ export default new Vuex.Store({
 
     /**
      * {
-     *   wordid: [suggestions]
+     *   wordid: [
+     *     0: englishword,
+     *     ...suggestions
+     *   ]
      * }
      */
     suggestions: {},
@@ -67,10 +70,7 @@ export default new Vuex.Store({
     },
 
     setSuggestions (state, payload) {
-      Vue.set(state.suggestions, payload.id, [
-        ...[payload.word],
-        ...payload.suggestions
-      ])
+      Vue.set(state.suggestions, payload.id, payload.suggestions)
     },
 
     clearSuggestions (state, wordID) {
