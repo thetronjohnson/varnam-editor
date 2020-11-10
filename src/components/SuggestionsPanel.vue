@@ -15,8 +15,8 @@
         </v-card>
       </v-skeleton-loader>
       <div v-for="(item, index) in $store.state.suggestionsDisplay" :key="item.key">
-        <v-card class="word-card d-flex align-center" outlined>
-          <v-btn depressed class="sug-id" color="primary" @click="chooseSuggestion(index)">{{ index }}</v-btn>
+        <v-card class="word-card d-flex align-center" outlined @click="chooseSuggestion(index)">
+          <v-btn depressed class="sug-id" color="primary">{{ index }}</v-btn>
           <div class="sug-word">{{ item }}</div>
         </v-card>
       </div>
