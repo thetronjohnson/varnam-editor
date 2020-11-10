@@ -43,7 +43,22 @@
           </v-tab-item>
         </v-tabs>
       </v-flex>
-    </v-layout>
+    </v-layout><br/>
+    <v-divider></v-divider>
+    <v-footer
+      :padless="true"
+    >
+      <v-card
+        flat
+        tile
+        width="100%"
+        class="text-center"
+      >
+        <v-card-text>
+          <a href="https://varnamproject.com/">Varnam</a> is a Free Software under&nbsp;<a href="https://indicproject.org/">Indic Project</a>. Copyright <a href="https://github.com/athul/varnam-desktop/graphs/contributors">Varnam Contributors</a>.
+        </v-card-text>
+      </v-card>
+    </v-footer>
   </v-container>
 </template>
 
