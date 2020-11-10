@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-form>
-      <p>Choose a file to import (learn) words from. Can be any text file or files downloaded from <a href="https://varnamproject.com/packs" target="_blank">here.</a></p>
+      <p>Choose a file to import (learn) words from. Can be <b>any text file</b> that has {{ langName }} words or <b>.VPF</b> [Varnam Pack Files] files downloaded from <a href="https://varnamproject.com/packs" target="_blank">here.</a></p>
       <v-file-input multiple v-model="files" label="File input"></v-file-input>
       <v-btn color="primary" @click="upload" :disabled="this.files.length === 0">Upload & Import</v-btn>
     </v-form><br/>
@@ -25,6 +25,20 @@ export default {
       files: [],
       log: [],
       loading: false
+    }
+  },
+
+  computed: {
+    langName () {
+      const langInfo = this.$store.state.langs.find(item => {
+        return item.Identifier === this.$store.state.settings.lang
+      })
+
+      if (langInfo) {
+        return langInfo.DisplayName
+      } else {
+        return ''
+      }
     }
   },
 

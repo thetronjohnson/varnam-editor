@@ -3,20 +3,20 @@
     <v-card flat tile :loading="loading">
       <v-card-title>Languages</v-card-title>
       <v-card-actions>
-        <p>
-          Choose languages and click Download.
-          You can also download these from <a target="_blank" href="https://varnamproject.com/downloads" @click="$LINK_OPEN_CLICK">here</a>.
+        <p style="font-weight: initial;">
+          Setting up languages from here requires internet. You can also download language files (<b>.VST</b>) from <a target="_blank" href="https://varnamproject.com/downloads">here</a> and set it up manually.
         </p>
         <v-spacer />
         <v-btn depressed color="primary" :disabled="downloadBtnDisabled" @click="download" title="Download & Import" aria-label="Download & Import">
           <v-icon left>mdi-arrow-down-box</v-icon>
-          Download
+          Download & Install
         </v-btn>
       </v-card-actions>
       <v-card-text>
         <v-data-table
           :headers="headers"
           :items.sync="langs"
+          :loading="tableLoading"
           sort-by="DisplayName"
           item-key="Identifier"
           show-select
@@ -101,6 +101,7 @@ export default {
       snackbarText: false,
 
       loading: false,
+      tableLoading: false,
 
       headers: [
         {
@@ -127,9 +128,11 @@ export default {
 
   methods: {
     init () {
+      this.tableLoading = true
       window.fetch(this.upstreamURL + '/languages')
         .then(response => response.json())
         .then(languages => {
+          this.tableLoading = false
           this.langs = languages
         })
     },

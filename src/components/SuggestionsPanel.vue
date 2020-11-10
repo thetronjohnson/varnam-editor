@@ -1,6 +1,11 @@
 <template>
   <v-card outlined :loading="loading">
-    <v-card-title class="title">Word Suggestions</v-card-title>
+    <v-card-title class="title">
+      Word Suggestions &nbsp;&nbsp;
+      <v-btn small text depressed color="primary" to="/settings?tab=words">
+        <v-icon small>mdi-plus</v-icon> New
+      </v-btn>
+    </v-card-title>
     <v-card-text class="suggestions">
       <v-skeleton-loader
         v-show="placeholder"
@@ -21,12 +26,6 @@
         </v-card>
       </div>
     </v-card-text>
-    <v-card-actions class="justify-center">
-      <v-btn depressed color="primary" to="/settings?tab=words">
-        <v-icon>mdi-plus</v-icon>
-        Add Word
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 

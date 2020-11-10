@@ -2,19 +2,19 @@
   <div class="addwords">
     <v-form>
       <v-row cols="12" md="4" align="center">
-        <v-col cols="4">
+        <v-col cols="5">
           <v-text-field
-            :label="`Word (in ${langName})`"
-            v-model="word"
+            label="Pattern in English"
+            v-model="pattern"
             :hide-details="true"
             outlined
             color="primary"
           ></v-text-field>
         </v-col>
-        <v-col cols="5">
+        <v-col cols="4">
           <v-text-field
-            label="Pattern"
-            v-model="pattern"
+            :label="`Word in ${langName}`"
+            v-model="word"
             :hide-details="true"
             outlined
             color="primary"
@@ -27,6 +27,7 @@
           </v-btn>
         </v-col>
       </v-row>
+      <p v-if="pattern.length > 0 && word.length > 0">Typing <b>{{ pattern }}</b> will show the suggestion <b>{{ word }}</b>.</p>
     </v-form>
   </div>
 </template>
@@ -60,7 +61,7 @@ export default {
     addWord () {
       this.$emit('addWord', {
         word: this.word,
-        pattern: this.pattern
+        pattern: this.pattern.toLowerCase()
       })
     }
   }

@@ -55,7 +55,8 @@
         class="text-center"
       >
         <v-card-text>
-          <a href="https://varnamproject.com/">Varnam</a> is a Free Software under&nbsp;<a href="https://indicproject.org/">Indic Project</a>. Copyright <a href="https://github.com/athul/varnam-desktop/graphs/contributors">Varnam Contributors</a>.
+          Need Help ? Feedback ? <a href="https://indicproject.org/" target="_blank">Contact Us</a><br/><br/>
+          <a href="https://varnamproject.com/" target="_blank">Varnam</a> is a Free Software under&nbsp;<a href="https://indicproject.org/" target="_blank">Indic Project</a>. Copyright 2020, <a href="https://github.com/athul/varnam-desktop/graphs/contributors" target="_blank">Varnam Contributors</a>.
         </v-card-text>
       </v-card>
     </v-footer>

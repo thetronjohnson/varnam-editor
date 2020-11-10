@@ -3,10 +3,10 @@
     <div v-if="$VARNAM_OFFLINE">
       <v-card rounded outlined>
         <v-card-title>Learn Word</v-card-title>
-        <v-card-subtitle>Varnam will learn this word, make different patterns from it.</v-card-subtitle>
+        <v-card-subtitle>Type in the word for Varnam to learn. Varnam will make different patterns from the word and add it to its database.</v-card-subtitle>
         <v-card-text>
           <v-text-field
-            :label="`Word to learn (in ${langName})`"
+            :label="`Word in ${langName}`"
             v-model="wordToLearn"
             :hide-details="true"
             outlined
@@ -30,7 +30,7 @@
       </v-card>
       <v-card rounded outlined>
         <v-card-title>Delete Word</v-card-title>
-        <v-card-subtitle>Varnam will delete this word and all patterns associated with it.</v-card-subtitle>
+        <v-card-subtitle>Varnam will delete this word and all patterns associated with it from database.</v-card-subtitle>
         <v-card-text>
           <v-row cols="12" align="center">
             <v-col cols="9">
